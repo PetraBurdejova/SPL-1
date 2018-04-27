@@ -7,3 +7,8 @@ print("Hello")
 #Aron Testeintrag
 
 #Neuer test
+
+library(readxl)
+data <- read_excel("Big5.xlsx")
+#View(data)
+data$country <- as.factor(data$country)
