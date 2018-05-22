@@ -2,8 +2,9 @@
 
 #import required libraries
 library(readxl)
+library(factoextra)
 if(!require("psych")) install.packages("psych"); library("psych")
-
+if(!require("factoextra")) install.packages("factoextra"); library("factoextra")
 #import data
 data <- read_excel("Big5.xlsx")
 
@@ -20,13 +21,19 @@ data$ageCat <- findInterval(data$age,c(10,20,30,40,50,60,70,80,90))
 #Principal Componant Analysis
 #This is the method which performs the PCA. I chose 5 factors since this corresonds to the Big 5.
 pca <- principal(data[8:57],nfactors = 5,rotate = "varimax")
-
+pca2 <- prcomp(data[8:57],scale. = TRUE)
+pca3 <- princomp(data[8:57])
+fviz_eig(pca2)
+fviz_eig(pca3)
 fa.diagram(pca)
 #This graphs show which variables are represented in which principal component.
 #As expected the questions each component is represents the questions that deal with one personality traint.
 #E.g. component 1 represents questions E1-E10 which deal with Extraversion. 
 fa.graph(pca)
 fiveFactors <- data.frame(pca$scores)
+pcaDF <- cbind(data[,1:7],data[,58], (data.frame(pca2$x)[,0:5]))
+pcaDF2 <- data.frame(pca3$scores[,0:5])
+pcaDF2 <- cbind(data[,1:7],data[,58],pcaDF2)
 colnames(fiveFactors) <-  c("Intro/Extra","Neuro","Agree","Conscient","Openess")
 fiveFactors <- cbind(data[,1:7],data[,58],fiveFactors)
 
