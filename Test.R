@@ -1,10 +1,12 @@
 #This is a test script
 
 #import required libraries
-library(readxl)
-library(factoextra)
 if(!require("psych")) install.packages("psych"); library("psych")
 if(!require("factoextra")) install.packages("factoextra"); library("factoextra")
+if(!require("readxl")) install.packages("readxl"); library("readxl")
+library(readxl)
+library(factoextra)
+
 #import data
 data <- read_excel("Big5.xlsx")
 
@@ -20,10 +22,11 @@ data[data$age > 100,]$age <- NaN
 data$ageCat <- findInterval(data$age,c(10,20,30,40,50,60,70,80,90))
 #Principal Componant Analysis
 #This is the method which performs the PCA. I chose 5 factors since this corresonds to the Big 5.
-pca <- principal(data[8:57],nfactors = 5,rotate = "varimax")
-pca2 <- prcomp(data[8:57],scale. = TRUE)
-pca3 <- princomp(data[8:57])
-fviz_eig(pca2)
+pca <- principal(data[,8:57],nfactors = 5,rotate = "varimax")
+pca2 <- prcomp(data[,8:57],scale. = TRUE)
+pca3 <- princomp(data[,8:57])
+factorA <- fa(data[,8:57],nfactors = 5)
+fviz_eig(pca2,ncp = 50)
 fviz_eig(pca3)
 fa.diagram(pca)
 #This graphs show which variables are represented in which principal component.
