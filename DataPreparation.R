@@ -7,8 +7,8 @@ if(!require("readxl")) install.packages("readxl"); library("readxl")
 
 
 #import data
-data <- read_excel("Big5.xlsx")
-clean <- function(x){
+clean <- function(){
+  x <- read_excel("Big5.xlsx")
   x$country <- as.factor(x$country)
   x$race <- as.factor(x$race)
   x$gender <- as.factor(x$gender)
@@ -21,7 +21,7 @@ clean <- function(x){
   return(x)
 }
 
-data <- clean(data)
+data <- clean()
 #transform some columns from numeric to factor
 
 #Principal Componant Analysis
@@ -37,7 +37,7 @@ pcaFunc1 <- function(data){
 }
 
 pcaFunc2 <- function(data){
-  pca2 <- prcomp(data[,8:57],scale. = TRUE)
+  pca2 <- prcomp(data[,8:57],scale. = FALSE)
   fviz_eig(pca2,ncp = 50)
   pcaDF <- cbind(data[,1:7],data[,58], (data.frame(pca2$x)[,0:5]))
   return(pcaDF)
@@ -52,5 +52,22 @@ pcaFunc3 <- function(data){
 }
 
 facFunc <- function(data){
-  return(fa(data[,8:57],nfactors = 5))
+  temp <- fa(data[,8:57],nfactors = 5)
+  tempDF <- data.frame(temp$scores)
+  colnames(tempDF) <- c("Intro/Extra","Neuro","Agree","Conscient","Openess")
+  return(cbind(data[,1:7],data[,58],tempDF))
 }
+
+#This space is for testing of data preparation
+# pca1 <- pcaFunc1(data)
+# pca2 <- pcaFunc2(data)
+# pca3 <- pcaFunc3(data)
+#fac1 <- fa(data[,8:57],nfactors = 5)
+# scaled.pca <- scale(pca2[,9:13])
+# pca3b<- princomp(data[,8:57])
+# pca1b<- principal(data[,8:57],nfactors = 5,rotate = "varimax")
+# factor.congruence(list(pca1b,fac1))
+# vss(data[,8:57])
+# fa.plot(fac1)
+# fa.diagram(fac1)
+# fa.graph(fac1)
