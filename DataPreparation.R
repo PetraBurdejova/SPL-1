@@ -4,6 +4,7 @@
 if(!require("psych")) install.packages("psych"); library("psych")
 if(!require("factoextra")) install.packages("factoextra"); library("factoextra")
 if(!require("readxl")) install.packages("readxl"); library("readxl")
+if(!require("GPArotation")) install.packages("GPArotation"); library("GPArotation")
 
 
 #import data
