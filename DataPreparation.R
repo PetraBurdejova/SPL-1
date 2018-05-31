@@ -23,7 +23,11 @@ clean <- function(){
 }
 
 data <- clean()
-#transform some columns from numeric to factor
+
+
+#Analyse how many factors to extract. Of course we want 5 since those are the personality traits measured.
+#This seems to be supported with this quite simple test.
+vss(data[,8:57])
 
 #Principal Componant Analysis
 #This is the method which performs the PCA. I chose 5 factors since this corresonds to the Big 5.
@@ -55,20 +59,20 @@ pcaFunc3 <- function(data){
 facFunc <- function(data){
   temp <- fa(data[,8:57],nfactors = 5)
   tempDF <- data.frame(temp$scores)
-  colnames(tempDF) <- c("Intro/Extra","Neuro","Agree","Conscient","Openess")
+  colnames(tempDF) <- c("Intro/Extra","Neuro","Agree","Openess","Conscient")
   return(cbind(data[,1:7],data[,58],tempDF))
 }
 
-#This space is for testing of data preparation
+# This space is for testing of data preparation
 # pca1 <- pcaFunc1(data)
 # pca2 <- pcaFunc2(data)
 # pca3 <- pcaFunc3(data)
-#fac1 <- fa(data[,8:57],nfactors = 5)
+fac1 <- fa(data[,8:57],nfactors = 5)
 # scaled.pca <- scale(pca2[,9:13])
 # pca3b<- princomp(data[,8:57])
 # pca1b<- principal(data[,8:57],nfactors = 5,rotate = "varimax")
 # factor.congruence(list(pca1b,fac1))
-# vss(data[,8:57])
+
 # fa.plot(fac1)
-# fa.diagram(fac1)
-# fa.graph(fac1)
+fa.diagram(fac1)
+fa.graph(fac1)
