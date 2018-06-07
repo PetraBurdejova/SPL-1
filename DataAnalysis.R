@@ -1,5 +1,5 @@
 source("DataPreparation.R")
-fiveFactors <- facFunc(data)
+fiveFactors <- getFactors(data)
 
 males = fiveFactors[fiveFactors$gender==1,]
 females =fiveFactors[fiveFactors$gender==2,]

@@ -28,10 +28,10 @@ data <- clean()
 #Analyse how many factors to extract. Of course we want 5 since those are the personality traits measured.
 #This seems to be supported with this quite simple test.
 vss(data[,8:57])
-
+fa.parallel(data[,8:57],se.bars = T)
 #Principal Componant Analysis
 #This is the method which performs the PCA. I chose 5 factors since this corresonds to the Big 5.
-pcaFunc1 <- function(data){
+psychPCA <- function(data){
   pca <- principal(data[,8:57],nfactors = 5,rotate = "varimax")
   fa.diagram(pca)
   #fa.graph(pca)
@@ -41,14 +41,14 @@ pcaFunc1 <- function(data){
   return(fiveFactors)
 }
 
-pcaFunc2 <- function(data){
+prcompPCA <- function(data){
   pca2 <- prcomp(data[,8:57],scale. = FALSE)
   fviz_eig(pca2,ncp = 50)
   pcaDF <- cbind(data[,1:7],data[,58], (data.frame(pca2$x)[,0:5]))
   return(pcaDF)
 }
 
-pcaFunc3 <- function(data){
+princompPCA <- function(data){
   pca3 <- princomp(data[,8:57])
   fviz_eig(pca3)
   pcaDF2 <- data.frame(pca3$scores[,0:5])
@@ -56,7 +56,7 @@ pcaFunc3 <- function(data){
   return(pcaDF2)
 }
 
-facFunc <- function(data){
+getFactors <- function(data){
   temp <- fa(data[,8:57],nfactors = 5)
   tempDF <- data.frame(temp$scores)
   colnames(tempDF) <- c("Intro/Extra","Neuro","Agree","Openess","Conscient")
@@ -64,15 +64,33 @@ facFunc <- function(data){
 }
 
 # This space is for testing of data preparation
-# pca1 <- pcaFunc1(data)
+pca1 <- principal(data[,8:57],nfactors = 5,rotate = "varimax")
 # pca2 <- pcaFunc2(data)
 # pca3 <- pcaFunc3(data)
-fac1 <- fa(data[,8:57],nfactors = 5)
+factors <- fa(data[,8:57],nfactors = 5)
+# cov(data[,8:17])
+# cov(data[,18:27])
+# cov(data[,28:37])
+# cov(data[,38:47])
+# cov(data[,48:57])
 # scaled.pca <- scale(pca2[,9:13])
 # pca3b<- princomp(data[,8:57])
 # pca1b<- principal(data[,8:57],nfactors = 5,rotate = "varimax")
-# factor.congruence(list(pca1b,fac1))
+factor.congruence(list(pca1,factors))
 
 # fa.plot(fac1)
-fa.diagram(fac1)
-fa.graph(fac1)
+# create_faGraph <- function(){
+#   temp <- fa(data[,8:17],nfactors = 1)
+#   fa.diagram(temp)
+#   temp <- fa(data[,18:27],nfactors = 1)
+#   fa.diagram(temp)
+#   temp <- fa(data[,28:37],nfactors = 1)
+#   fa.diagram(temp)
+#   temp <- fa(data[,38:47],nfactors = 1)
+#   fa.diagram(temp)
+#   temp <- fa(data[,48:57],nfactors = 1)
+#   fa.diagram(temp)
+# }
+# create_faGraph()
+#fa.diagram(fac2)
+#fa.graph(fac1)
