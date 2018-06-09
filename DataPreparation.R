@@ -67,7 +67,41 @@ getFactors <- function(data){
 pca1 <- principal(data[,8:57],nfactors = 5,rotate = "varimax")
 # pca2 <- pcaFunc2(data)
 # pca3 <- pcaFunc3(data)
+
+#Comparing two different functions for factor extraction.
+#The first one "fa" is from the "psych" package and by default uses the minres solution and oblimin rotation
+#The factanal function uses maximum likelihood and varimax rotation.
 factors <- fa(data[,8:57],nfactors = 5)
+factors1 <- fa(data[,8:57],nfactors = 5,rotate = "varimax",fm="ml")
+factors1b <- fa(data[,8:57],nfactors = 5,rotate = "varimax")
+factors1c <- fa(data[,8:57],nfactors = 5,fm="ml")
+factors2 <- factanal(data[,8:57], 5)
+fScores <- data.frame(factors$scores)
+fScores1 <- data.frame(factors1$scores)
+fScores1b <- data.frame(factors1b$scores)
+fScores1c <- data.frame(factors1c$scores)
+coef <- solve(factors2$correlation) %*% factors2$loadings
+
+#Here we compare the results of scaling the data vs. no scaling.
+fScores2 <- data.frame(scale(data[,8:57],FALSE,FALSE) %*% coef)
+fScores2Scaled <- data.frame(scale(data[,8:57],TRUE,TRUE) %*% coef)
+
+#This shows the average difference in values comparing fa and factanal, both scaled.
+#The first comparison is for the default settings of fa vs. factanal. 
+#The second comparisson is fa using varimax and ml vs. factanal.
+#The average difference in the first comparisson is quite significant with roughly 0.121.
+#As expected the results of the second comparisson are almost 0.
+temp <- fScores-fScores2Scaled
+sum(abs(temp))/19719/5
+
+temp <- fScores1-fScores2Scaled
+sum(abs(temp))/19719/5
+
+temp <- fScores1b-fScores2Scaled
+sum(abs(temp))/19719/5
+
+temp <- fScores1c-fScores2Scaled
+sum(abs(temp))/19719/5
 # cov(data[,8:17])
 # cov(data[,18:27])
 # cov(data[,28:37])
