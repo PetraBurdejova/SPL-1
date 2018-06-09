@@ -5,7 +5,7 @@ if(!require("psych")) install.packages("psych"); library("psych")
 if(!require("factoextra")) install.packages("factoextra"); library("factoextra")
 if(!require("readxl")) install.packages("readxl"); library("readxl")
 if(!require("GPArotation")) install.packages("GPArotation"); library("GPArotation")
-
+if(!require("nFactors")) install.packages("nFactors"); library(nFactors)
 
 #import data
 clean <- function(){
@@ -29,6 +29,13 @@ data <- clean()
 #This seems to be supported with this quite simple test.
 vss(data[,8:57])
 fa.parallel(data[,8:57],se.bars = T)
+
+ev <- eigen(cor(data[,8:57])) # get eigenvalues
+ap <- parallel(subject=nrow(data[,8:57]),var=ncol(data[,8:57]),
+               rep=100,cent=.05)
+nS <- nScree(x=ev$values, aparallel=ap$eigen$qevpea)
+plotnScree(nS)
+
 #Principal Componant Analysis
 #This is the method which performs the PCA. I chose 5 factors since this corresonds to the Big 5.
 psychPCA <- function(data){
@@ -57,7 +64,7 @@ princompPCA <- function(data){
 }
 
 getFactors <- function(data){
-  temp <- fa(data[,8:57],nfactors = 5)
+  temp <- fa(data[,8:57],nfactors = 5,rotate = "varimax",fm="ml")
   tempDF <- data.frame(temp$scores)
   colnames(tempDF) <- c("Intro/Extra","Neuro","Agree","Openess","Conscient")
   return(cbind(data[,1:7],data[,58],tempDF))
@@ -86,6 +93,9 @@ coef <- solve(factors2$correlation) %*% factors2$loadings
 fScores2 <- data.frame(scale(data[,8:57],FALSE,FALSE) %*% coef)
 fScores2Scaled <- data.frame(scale(data[,8:57],TRUE,TRUE) %*% coef)
 
+factors2Evaluation <- fa.stats(data[,8:57],factors2$loadings)
+factorsEvaluation <- fa.stats(data[,8:57],factors$loadings)
+
 #This shows the average difference in values comparing fa and factanal, both scaled.
 #The first comparison is for the default settings of fa vs. factanal. 
 #The second comparisson is fa using varimax and ml vs. factanal.
@@ -110,8 +120,8 @@ sum(abs(temp))/19719/5
 # scaled.pca <- scale(pca2[,9:13])
 # pca3b<- princomp(data[,8:57])
 # pca1b<- principal(data[,8:57],nfactors = 5,rotate = "varimax")
-factor.congruence(list(pca1,factors))
-
+data.frame(factor.congruence(list(pca1,factors)))[6:10,0:5]
+data.frame(factor.congruence(list(pca1,factors2)))[6:10,0:5]
 # fa.plot(fac1)
 # create_faGraph <- function(){
 #   temp <- fa(data[,8:17],nfactors = 1)
