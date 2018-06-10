@@ -27,8 +27,8 @@ data <- clean()
 
 #Analyse how many factors to extract. Of course we want 5 since those are the personality traits measured.
 #This seems to be supported with this quite simple test.
-vss(data[,8:57])
-fa.parallel(data[,8:57],se.bars = T)
+vss(data[,8:57],fm="ml")
+fa.parallel(data[,8:57],se.bars = T,fm = "ml")
 
 ev <- eigen(cor(data[,8:57])) # get eigenvalues
 ap <- parallel(subject=nrow(data[,8:57]),var=ncol(data[,8:57]),
