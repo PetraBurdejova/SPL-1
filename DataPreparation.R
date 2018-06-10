@@ -35,6 +35,7 @@ ap <- parallel(subject=nrow(data[,8:57]),var=ncol(data[,8:57]),
                rep=100,cent=.05)
 nS <- nScree(x=ev$values, aparallel=ap$eigen$qevpea)
 plotnScree(nS)
+par(col = "black")
 
 #Principal Componant Analysis
 #This is the method which performs the PCA. I chose 5 factors since this corresonds to the Big 5.
