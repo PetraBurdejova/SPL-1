@@ -1,5 +1,3 @@
-#This is a test script
-
 #import required libraries
 if(!require("psych")) install.packages("psych"); library("psych")
 if(!require("factoextra")) install.packages("factoextra"); library("factoextra")
@@ -94,7 +92,7 @@ coef <- solve(factors2$correlation) %*% factors2$loadings
 fScores2 <- data.frame(scale(data[,8:57],FALSE,FALSE) %*% coef)
 fScores2Scaled <- data.frame(scale(data[,8:57],TRUE,TRUE) %*% coef)
 
-factors2Evaluation <- fa.stats(data[,8:57],factors2$loadings)
+factors1Evaluation <- fa.stats(data[,8:57],factors1$loadings)
 factorsEvaluation <- fa.stats(data[,8:57],factors$loadings)
 
 #This shows the average difference in values comparing fa and factanal, both scaled.
@@ -137,5 +135,5 @@ data.frame(factor.congruence(list(pca1,factors2)))[6:10,0:5]
 #   fa.diagram(temp)
 # }
 # create_faGraph()
-#fa.diagram(fac2)
+#fa.diagram(factors1)
 #fa.graph(fac1)

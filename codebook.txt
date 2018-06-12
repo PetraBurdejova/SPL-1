@@ -1,4 +1,21 @@
-This data was collected (c. 2012) through on interactive online personality test. Participants were informed that their responses would be recorded and used for research at the begining of the test and asked to confirm their consent at the end of the test.
+This data was collected through an on-line personality test.
+
+At the end of the personality test, users were asked if their answers were accurate and would be willing to complete an additional survey. At the end of the additional survey users were asked if their answers were accurate and their data could be used for research. This dataset consists of exclusively participants who consented yes at both parts.
+
+This data was collected over several pages, the time on each page was recorded:
+introelapse		the time spent on the introduction page to the big five personality test, had an introduction to the big five and a policies statement.
+testelapse		the time spend on the body of the big five personality test
+surveyelapse	the time in seconds spent on the supplemental survey
+
+Some other values were calculated from technical information:
+country	ISO country code
+operatingsystem	The operating system of the users computer, determined from HTTP user agent
+browser	The browser the user is using, determined from HTTP user agent
+screenw	The width of the users screen in pixels, from javascript
+screenh	The height of the users screen in pixels, from javascript
+
+
+The personality test was big five scales from the international personality item pool. 
 
 The following items were rated on a five point scale where 1=Disagree, 3=Neutral, 5=Agree (0=missed). All were presented on one page in the order E1, N2, A1, C1, O1, E2...... 
 
@@ -53,17 +70,61 @@ O8	I use difficult words.
 O9	I spend time reflecting on things.
 O10	I am full of ideas.
 
-On the next page the following values were collected.
 
-race	Chosen from a drop down menu. 1=Mixed Race, 2=Arctic (Siberian, Eskimo), 3=Caucasian (European), 4=Caucasian (Indian), 5=Caucasian (Middle East), 6=Caucasian (North African, Other), 7=Indigenous Australian, 8=Native American, 9=North East Asian (Mongol, Tibetan, Korean Japanese, etc), 10=Pacific (Polynesian, Micronesian, etc), 11=South East Asian (Chinese, Thai, Malay, Filipino, etc), 12=West African, Bushmen, Ethiopian, 13=Other (0=missed)
-age	entered as text (individuals reporting age < 13 were not recorded)
-engnat	Response to "is English your native language?". 1=yes, 2=no (0=missed)
-gender	Chosen from a drop down menu. 1=Male, 2=Female, 3=Other (0=missed)
-hand	"What hand do you use to write with?". 1=Right, 2=Left, 3=Both (0=missed)
+Then came the supplemental survey, if they agreed to it (only individuals who opted into the supplemental survey are included in this dataset).
 
-On this page users were also asked to confirm that their answers were accurate and could be used for research. Participants who did not were not recorded).
+The following items were rated on a five point scale where 1=Very much like me, 2=Mostly like me, 3=Somewhat like me, 4=Not much like me, 5=Not like me at all:
 
-Some values were calculated from technical information.
+The item text is abbreviated here, see https://sites.sas.upenn.edu/duckworth/pages/research for the full items
 
-country	The participant's technical location. ISO country code.
-source	How the participant came to the test. Based on HTTP Referer. 1=from another page on the test website, 2=from google, 3=from facebook, 4=from any url with ".edu" in its domain name (e.g. xxx.edu, xxx.edu.au), 6=other source, or HTTP Referer not provided.
+GS1	I have...
+GS2	New ideas...
+GS3	My interests...
+GS4	Setbacks don't...
+GS5	I have been...
+GS6	I am...
+GS7	I often...
+GS8	I have...
+GS9	I finish...
+GS10	I have...
+GS11	I become...
+GS12	I am...
+
+The following items were presented as a check-list and subjects were instructed "In the grid below, check all the words whose definitions you are sure you know":
+
+VCL1	boat
+VCL2	incoherent
+VCL3	pallid
+VCL4	robot
+VCL5	audible
+VCL6	cuivocal
+VCL7	paucity
+VCL8	epistemology
+VCL9	florted
+VCL10	decide
+VCL11	pastiche
+VCL12	verdid
+VCL13	abysmal
+VCL14	lucid
+VCL15	betray
+VCL16	funny
+
+A value of 1 is checked, 0 means unchecked. The words at VCL6, VCL9, and VCL12 are not real words and can be used as a validity check.
+
+A bunch more questions were then asked:
+
+education	"How much education have you completed?" 1=Less than high school, 2=High school, 3=University degree, 4=Graduate degree
+urban	"What type of area did you live when you were a child?" 1=Rural (country side), 2=Suburban, 3=Urban (town, city)
+gender	"What is your gender?" 1=Male, 2=Female, 3=Other
+engnat	"Is English your native language?" 1=Yes, 2=No
+age	"How many years old are you?"
+hand	"What hand do you use to write with?" 1=Right, 2=Left, 3=Both
+religion	"What is your religion?" 1=Agnostic, 2=Atheist, 3=Buddhist, 4=Christian (Catholic), 5=Christian (Mormon), 6=Christian (Protestant), 7=Christian (Other), 8=Hindu, 9=Jewish, 10=Muslim, 11=Sikh, 12=Other
+orientation	"What is your sexual orientation?" 1=Heterosexual, 2=Bisexual, 3=Homosexual, 4=Asexual, 5=Other
+race	"What is your race?"	1=Asian, 2=Arab, 3=Black, 4=Indigenous Australian, Native American or White, 5=Other
+voted	"Have you voted in a national election in the past year?" 1=Yes, 2=No
+married	"What is your marital status?" 1=Never married, 2=Currently married, 3=Previously married
+familysize	"Including you, how many children did your mother have?"
+
+NOTE: for the variable race, an error in the programming of the survey left Indigenous Australian, Native American and White responses all registering as the same value.
+
