@@ -72,3 +72,12 @@ plot(gritDensity,main = "The Density Distribution of Grit",col = "red", xlab = "
 lines(realGritDensity,col="blue")
 legend(x = "topright", y = NULL, legend=c("Factor Grit", "Real Grit"),
        col=c("red", "blue"),pch = 15)
+
+
+malesGrit <- gritFactors[gritFactors$gender==1,]
+femalesGrit <- gritFactors[gritFactors$gender==2,]
+t.test(males[,9],malesGrit[,14])
+t.test(females[,9],femalesGrit[,14])
+
+weightsNonGrit <- factors1$weights
+weightsGrit <- factorsGrit$weights
