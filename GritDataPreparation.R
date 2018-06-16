@@ -6,7 +6,6 @@ grit <- read.delim("data.csv")
 factorsGrit <- fa(grit[,43:92],nfactors = 5,rotate = "varimax",fm="ml")
 gritValue <- fa(grit[,3:14],nfactors = 1,rotate = "varimax",fm="ml")
 summary(gritValue$scores)
-summary(gritValue1$scores)
 sd(gritValue$scores)
 
 gritQuestions <- grit[,3:14]
@@ -30,6 +29,7 @@ gritFactors <- cbind(grit[,1],grit[,31:42],gritScores,temp)
 colnames(gritFactors)[1] <- "Country"
 gritFactors$realGrit <- rowSums(gritQuestions)/12
 gritFactors$realGrit <- gritFactors$realGrit - mean(gritFactors$realGrit)
+gritFactors$rescaled <- gritFactors$Grit*(sd(gritFactors$realGrit)/sd(gritFactors$Grit))
 
 density1 <- density(fScores1[,1])
 density2 <- density(gritScores[,1])
@@ -68,14 +68,19 @@ legend(x = "topright", y = NULL, legend=c("Big5", "Grit"),
 
 gritDensity <- density(gritFactors[,19])
 realGritDensity <- density(gritFactors[,20])
+scaledDenisty <- density(gritFactors$rescaled)
 plot(gritDensity,main = "The Density Distribution of Grit",col = "red", xlab = "Grit",ylim = c(0,0.5))
 lines(realGritDensity,col="blue")
-legend(x = "topright", y = NULL, legend=c("Factor Grit", "Real Grit"),
-       col=c("red", "blue"),pch = 15)
+lines(scaledDenisty,col="orange")
+legend(x = "topright", y = NULL, legend=c("Factor Grit", "Real Grit","Rescaled Grit"),
+       col=c("red", "blue","orange"),pch = 15)
 
 
 malesGrit <- gritFactors[gritFactors$gender==1,]
 femalesGrit <- gritFactors[gritFactors$gender==2,]
+fiveFactors <- getFactors(data)
+males = fiveFactors[fiveFactors$gender==1,]
+females =fiveFactors[fiveFactors$gender==2,]
 t.test(males[,9],malesGrit[,14])
 t.test(females[,9],femalesGrit[,14])
 
