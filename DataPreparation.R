@@ -83,7 +83,7 @@ getDataSetWithBig5 <- function(data,grit){
   return(tempSet)
 }
 
-realValues <- getDataSetWithBig5(data)
+realValues <- getDataSetWithBig5(data,FALSE)
 
 
 #Analyse how many factors to extract. Of course we want 5 since those are the personality traits measured.
@@ -200,7 +200,7 @@ data.frame(factor.congruence(list(pca1,factors2)))[6:10,0:5]
 # }
 # create_faGraph()
 fa.diagram(factors1)
-fa.graph(fac1)
+fa.graph(factors1)
 
 
 
