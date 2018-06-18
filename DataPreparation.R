@@ -105,7 +105,7 @@ psychPCA <- function(data){
   fa.diagram(pca)
   #fa.graph(pca)
   fiveFactors <- data.frame(pca$scores)
-  colnames(fiveFactors) <-  c("Intro/Extra","Neuro","Agree","Conscient","Openess")
+  colnames(fiveFactors) <-  c("Intro/Extra","Neuro","Agree","Openess","Conscient")
   fiveFactors <- cbind(data[,1:7],data[,58],fiveFactors)
   return(fiveFactors)
 }
@@ -202,5 +202,70 @@ data.frame(factor.congruence(list(pca1,factors2)))[6:10,0:5]
 fa.diagram(factors1)
 fa.graph(factors1)
 
+compareDesities <- function(d){
+  realValues <- getDataSetWithBig5(d,F)
+  oldValues <- getFactors(d)
+  pcaValues <- psychPCA(d)
+  par(lwd = 2)
+  
+  real <- density(realValues$Extraversion)
+  estimatedFA <- density(oldValues$`Intro/Extra`)
+  estimatedPCA <- density(pcaValues$`Intro/Extra`)
+  plot(real,main = "The density distribution of Extraversion",col = "red",xlab = "Extraversion")
+  lines(estimatedFA,col="blue")
+  lines(estimatedPCA,col="green")
+  legend(x = "topright", y = NULL, legend=c("True", "FA","PCA"),
+         col=c("red", "blue","green"),pch = 15)
+  
+  real <- density(realValues$Agreeableness)
+  estimatedFA <- density(oldValues$Agree)
+  estimatedPCA <- density(pcaValues$Agree)
+  plot(real,main = "The density distribution of Agreeableness",col = "red",xlab = "Agreeableness")
+  lines(estimatedFA,col="blue")
+  lines(estimatedPCA,col="green")
+  legend(x = "topright", y = NULL, legend=c("True", "FA","PCA"),
+         col=c("red", "blue","green"),pch = 15)
+  
+  real <- density(realValues$Neuroticism)
+  estimatedFA <- density(oldValues$Neuro)
+  estimatedPCA <- density(pcaValues$Neuro)
+  plot(real,main = "The density distribution of Neuroticism",col = "red",xlab = "Neuroticism")
+  lines(estimatedFA,col="blue")
+  lines(estimatedPCA,col="green")
+  legend(x = "topright", y = NULL, legend=c("True", "FA","PCA"),
+         col=c("red", "blue","green"),pch = 15)
+  
+  real <- density(realValues$Openess)
+  estimatedFA <- density(oldValues$Openess)
+  estimatedPCA <- density(pcaValues$Openess)
+  plot(real,main = "The density distribution of Openess",col = "red",xlab = "Openess")
+  lines(estimatedFA,col="blue")
+  lines(estimatedPCA,col="green")
+  legend(x = "topright", y = NULL, legend=c("True", "FA","PCA"),
+         col=c("red", "blue","green"),pch = 15)
+  
+  real <- density(realValues$Conscientiousness)
+  estimatedFA <- density(oldValues$Conscient)
+  estimatedPCA <- density(pcaValues$Conscient)
+  plot(real,main = "The density distribution of Conscientiousness",col = "red",xlab = "Conscientiousness")
+  lines(estimatedFA,col="blue")
+  lines(estimatedPCA,col="green")
+  legend(x = "topright", y = NULL, legend=c("True", "FA","PCA"),
+         col=c("red", "blue","green"),pch = 15)
+  par(lwd = 1)
+}
 
+realValues <- getDataSetWithBig5(data,F)
+oldValues <- getFactors(data)
+pcaValues <- psychPCA(data)
 
+avgDiffFA <- abs(realValues[,9:13] - oldValues[,9:13])
+n <- nrow(avgDiffFA)*5
+avgDiffFA <- rowSums(avgDiffFA)
+avgDiffFA <- sum(avgDiffFA)/n
+
+avgDiffPCA <- abs(realValues[,9:13] - pcaValues[,9:13])
+avgDiffPCA <- rowSums(avgDiffPCA)
+avgDiffPCA <- sum(avgDiffPCA)/n
+
+compareDesities(data)
