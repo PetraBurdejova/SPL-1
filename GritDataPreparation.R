@@ -22,10 +22,13 @@ data.frame(factor.congruence(list(factorsGrit,factors1)))[6:10,0:5]
 
 
 gritScores <- factorsGrit$scores
-colnames(gritScores)<- c("Intro/Extra","Neuro","Agree","Openess","Conscient")
+colnames(gritScores)<- c("Intro/Extra","Neuro","Agree","Conscient","Openess")
+gritScores <- data.frame(gritScores)
+gritScores$Neuro <- -1*(gritScores$Neuro)
+gritScores2 <- getDataSetWithBig5(grit,TRUE)
 temp <- gritValue$scores
 colnames(temp) <- c("Grit")
-gritFactors <- cbind(grit[,1],grit[,31:42],gritScores,temp)
+gritFactors <- cbind(grit[,1],grit[,31:42],gritScores2,temp)
 colnames(gritFactors)[1] <- "Country"
 gritFactors$realGrit <- rowSums(gritQuestions)/12
 gritFactors$realGrit <- gritFactors$realGrit - mean(gritFactors$realGrit)

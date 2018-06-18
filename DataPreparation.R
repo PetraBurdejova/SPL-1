@@ -62,9 +62,14 @@ getResults <- function(dataSet){
 }
 
 
-getDataSetWithBig5 <- function(data){
+getDataSetWithBig5 <- function(data,grit){
   tempSet <- getResults(data)
-  tempSet <- cbind(tempSet[,1:7],tempSet[58:63])
+  if(grit){
+    tempSet <- tempSet[,99:103]
+  }
+  else {
+    tempSet <- cbind(tempSet[,1:7],tempSet[58:63])
+  }
   tempSet$Extraversion <- tempSet$Extraversion/10
   tempSet$Extraversion <- tempSet$Extraversion-mean(tempSet$Extraversion)
   tempSet$Neuroticism <- tempSet$Neuroticism/10

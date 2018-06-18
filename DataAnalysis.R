@@ -1,5 +1,5 @@
 source("DataPreparation.R")
-fiveFactors <- getFactors(data)
+fiveFactors <- getDataSetWithBig5(data,FALSE)
 
 males = fiveFactors[fiveFactors$gender==1,]
 females =fiveFactors[fiveFactors$gender==2,]
