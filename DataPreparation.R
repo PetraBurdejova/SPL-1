@@ -23,6 +23,64 @@ clean <- function(){
 data <- clean()
 
 
+#Functions to get the "real" values according to the evaluation key
+#The results have been rescaled by dividing them through 10 and shifting the mean to 0
+getResults <- function(dataSet){
+  start <- which(colnames(dataSet)=="E1")
+  extraversion <- dataSet[,start:(start+9)]
+  extraversion[,2] <- 6-extraversion[,2]
+  extraversion[,4] <- 6-extraversion[,4]
+  extraversion[,6] <- 6-extraversion[,6]
+  extraversion[,8] <- 6-extraversion[,8]
+  extraversion[,10] <- 6-extraversion[,10]
+  neuroticism <- dataSet[,(start+10):(start+19)]
+  change <- c(1,3,5,6,7,8,9,10)
+  for( c in change){
+    neuroticism[,c] <- 6-neuroticism[,c]
+  }
+  agreeableness <- dataSet[,(start+20):(start+29)]
+  change <- c(1,3,5,7)
+  for( c in change){
+    agreeableness[,c] <- 6- agreeableness[,c]
+  }
+  conscientiousness <- dataSet[,(start+30):(start+39)]
+  change <- c(2,4,6,8)
+  for(c in change){
+    conscientiousness[,c] <- 6- conscientiousness[,c]
+  }
+  openess <- dataSet[,(start+40):(start+49)]
+  change <- c(2,4,6)
+  for(c in change){
+    openess[,c] <- 6- openess[,c]
+  }
+  dataSet$Extraversion <- rowSums(extraversion)
+  dataSet$Neuroticism <- rowSums(neuroticism)
+  dataSet$Agreeableness <- rowSums(agreeableness)
+  dataSet$Conscientiousness <- rowSums(conscientiousness)
+  dataSet$Openess <- rowSums(openess)
+  return(dataSet)
+}
+
+
+getDataSetWithBig5 <- function(data){
+  tempSet <- getResults(data)
+  tempSet <- cbind(tempSet[,1:7],tempSet[58:63])
+  tempSet$Extraversion <- tempSet$Extraversion/10
+  tempSet$Extraversion <- tempSet$Extraversion-mean(tempSet$Extraversion)
+  tempSet$Neuroticism <- tempSet$Neuroticism/10
+  tempSet$Neuroticism <- tempSet$Neuroticism-mean(tempSet$Neuroticism)
+  tempSet$Openess <- tempSet$Openess/10
+  tempSet$Openess <- tempSet$Openess-mean(tempSet$Openess)
+  tempSet$Conscientiousness <- tempSet$Conscientiousness/10
+  tempSet$Conscientiousness <- tempSet$Conscientiousness-mean(tempSet$Conscientiousness)
+  tempSet$Agreeableness <- tempSet$Agreeableness/10
+  tempSet$Agreeableness <- tempSet$Agreeableness-mean(tempSet$Agreeableness)
+  return(tempSet)
+}
+
+realValues <- getDataSetWithBig5(data)
+
+
 #Analyse how many factors to extract. Of course we want 5 since those are the personality traits measured.
 #This seems to be supported with this quite simple test.
 vss(data[,8:57],fm="ml")
@@ -65,7 +123,8 @@ princompPCA <- function(data){
 getFactors <- function(data){
   temp <- fa(data[,8:57],nfactors = 5,rotate = "varimax",fm="ml")
   tempDF <- data.frame(temp$scores)
-  colnames(tempDF) <- c("Intro/Extra","Neuro","Agree","Openess","Conscient")
+  colnames(tempDF) <- c("Intro/Extra","Neuro","Agree","Conscient","Openess")
+  tempDF$Neuro <- -1*tempDF$Neuro
   return(cbind(data[,1:7],data[,58],tempDF))
 }
 
@@ -135,5 +194,8 @@ data.frame(factor.congruence(list(pca1,factors2)))[6:10,0:5]
 #   fa.diagram(temp)
 # }
 # create_faGraph()
-#fa.diagram(factors1)
-#fa.graph(fac1)
+fa.diagram(factors1)
+fa.graph(fac1)
+
+
+
