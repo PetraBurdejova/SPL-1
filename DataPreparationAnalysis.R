@@ -184,4 +184,7 @@ avgDiffPCA <- abs(realValues[,9:13] - pcaValues[,9:13])
 avgDiffPCA <- rowSums(avgDiffPCA)
 avgDiffPCA <- sum(avgDiffPCA)/n
 
+summary(realValues[,9:13])
+summary(oldValues[,9:13])
+summary(pcaValues[,9:13])
 compareDesities(data)
