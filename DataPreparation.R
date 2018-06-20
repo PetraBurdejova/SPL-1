@@ -4,6 +4,7 @@ if(!require("factoextra")) install.packages("factoextra"); library("factoextra")
 if(!require("readxl")) install.packages("readxl"); library("readxl")
 if(!require("GPArotation")) install.packages("GPArotation"); library("GPArotation")
 if(!require("nFactors")) install.packages("nFactors"); library(nFactors)
+if(!require("plyr")) install.packages("plyr"); library(plyr)
 
 #import data
 clean <- function(){

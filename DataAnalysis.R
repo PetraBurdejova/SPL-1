@@ -1,6 +1,9 @@
 source("DataPreparation.R")
 fiveFactors <- getDataSetWithBig5(data,FALSE)
 
+#Count occurances of country levels in males
+temp <- count(males, "country")
+
 males = fiveFactors[fiveFactors$gender==1,]
 females =fiveFactors[fiveFactors$gender==2,]
 mean(males[,9])-mean(females[,9])
