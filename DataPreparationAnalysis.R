@@ -1,4 +1,5 @@
 source("DataPreparation.R")
+if(!require("compare")) install.packages("compare"); library("compare")
 
 realValues <- getDataSetWithBig5(data,FALSE)
 
@@ -18,10 +19,10 @@ par(col = "black")
 #This is the method which performs the PCA. I chose 5 factors since this corresonds to the Big 5.
 psychPCA <- function(data){
   pca <- principal(data[,8:57],nfactors = 5,rotate = "varimax")
-  fa.diagram(pca)
+  #fa.diagram(pca)
   #fa.graph(pca)
   fiveFactors <- data.frame(pca$scores)
-  colnames(fiveFactors) <-  c("Intro/Extra","Neuro","Agree","Openess","Conscient")
+  colnames(fiveFactors) <-  c("Intro/Extra","Neuro","Agree","Conscient","Openess")
   fiveFactors <- cbind(data[,1:7],data[,58],fiveFactors)
   return(fiveFactors)
 }
@@ -51,46 +52,48 @@ getFactors <- function(data){
 
 # This space is for testing of data preparation
 pca1 <- principal(data[,8:57],nfactors = 5,rotate = "varimax")
-# pca2 <- pcaFunc2(data)
+pca2 <- princomp(data[,8:57])
+#pca2 <- pcaFunc2(data)
 # pca3 <- pcaFunc3(data)
 
 #Comparing two different functions for factor extraction.
 #The first one "fa" is from the "psych" package and by default uses the minres solution and oblimin rotation
 #The factanal function uses maximum likelihood and varimax rotation.
-factors <- fa(data[,8:57],nfactors = 5)
+#factors <- fa(data[,8:57],nfactors = 5)
 factors1 <- fa(data[,8:57],nfactors = 5,rotate = "varimax",fm="ml")
-factors1b <- fa(data[,8:57],nfactors = 5,rotate = "varimax")
-factors1c <- fa(data[,8:57],nfactors = 5,fm="ml")
-factors2 <- factanal(data[,8:57], 5)
-fScores <- data.frame(factors$scores)
-fScores1 <- data.frame(factors1$scores)
-fScores1b <- data.frame(factors1b$scores)
-fScores1c <- data.frame(factors1c$scores)
-coef <- solve(factors2$correlation) %*% factors2$loadings
+#factors1b <- fa(data[,8:57],nfactors = 5,rotate = "varimax")
+#factors1c <- fa(data[,8:57],nfactors = 5,fm="ml")
+#factors2 <- factanal(data[,8:57], 5)
+#fScores <- data.frame(factors$scores)
+#fScores1 <- data.frame(factors1$scores)
+#fScores1b <- data.frame(factors1b$scores)
+#fScores1c <- data.frame(factors1c$scores)
+#coef <- solve(factors2$correlation) %*% factors2$loadings
 
 #Here we compare the results of scaling the data vs. no scaling.
-fScores2 <- data.frame(scale(data[,8:57],FALSE,FALSE) %*% coef)
-fScores2Scaled <- data.frame(scale(data[,8:57],TRUE,TRUE) %*% coef)
+#fScores2 <- data.frame(scale(data[,8:57],FALSE,FALSE) %*% coef)
+#fScores2Scaled <- data.frame(scale(data[,8:57],TRUE,TRUE) %*% coef)
 
 factors1Evaluation <- fa.stats(data[,8:57],factors1$loadings)
-factorsEvaluation <- fa.stats(data[,8:57],factors$loadings)
+pca1Evaluation <- fa.stats(data[,8:57],pca1$loadings)
+
 
 #This shows the average difference in values comparing fa and factanal, both scaled.
 #The first comparison is for the default settings of fa vs. factanal. 
 #The second comparisson is fa using varimax and ml vs. factanal.
 #The average difference in the first comparisson is quite significant with roughly 0.121.
 #As expected the results of the second comparisson are almost 0.
-temp <- fScores-fScores2Scaled
-sum(abs(temp))/19719/5
-
-temp <- fScores1-fScores2Scaled
-sum(abs(temp))/19719/5
-
-temp <- fScores1b-fScores2Scaled
-sum(abs(temp))/19719/5
-
-temp <- fScores1c-fScores2Scaled
-sum(abs(temp))/19719/5
+# temp <- fScores-fScores2Scaled
+# sum(abs(temp))/19719/5
+# 
+# temp <- fScores1-fScores2Scaled
+# sum(abs(temp))/19719/5
+# 
+# temp <- fScores1b-fScores2Scaled
+# sum(abs(temp))/19719/5
+# 
+# temp <- fScores1c-fScores2Scaled
+# sum(abs(temp))/19719/5
 # cov(data[,8:17])
 # cov(data[,18:27])
 # cov(data[,28:37])
@@ -99,8 +102,8 @@ sum(abs(temp))/19719/5
 # scaled.pca <- scale(pca2[,9:13])
 # pca3b<- princomp(data[,8:57])
 # pca1b<- principal(data[,8:57],nfactors = 5,rotate = "varimax")
-data.frame(factor.congruence(list(pca1,factors)))[6:10,0:5]
-data.frame(factor.congruence(list(pca1,factors2)))[6:10,0:5]
+data.frame(factor.congruence(list(pca1,factors1)))[6:10,0:5]
+#data.frame(factor.congruence(list(pca1,factors2)))[6:10,0:5]
 # fa.plot(fac1)
 # create_faGraph <- function(){
 #   temp <- fa(data[,8:17],nfactors = 1)
@@ -188,3 +191,4 @@ summary(realValues[,9:13])
 summary(oldValues[,9:13])
 summary(pcaValues[,9:13])
 compareDesities(data)
+
