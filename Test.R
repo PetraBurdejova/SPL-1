@@ -57,4 +57,5 @@ lines(ages$Neuro,col="red")
 lines(ages$Agree,col="green")
 lines(ages$Openess,col="orange")     
 lines(ages$Conscient,col="black")
-#legend("topleft", inset=.05, title="Trait", c("Extra","Neuro","Agree","Openess","Conscient"), fill=c("blue","red","green","orange","black"), horiz=TRUE,)
+legend("topleft", inset=.05, title="Trait", c("Extra","Neuro","Agree","Openess","Conscient"), 
+       fill=c("blue","red","green","orange","black"), horiz=TRUE,cex=0.70)
