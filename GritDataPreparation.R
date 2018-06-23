@@ -1,91 +1,88 @@
-#import required libraries
+# import required libraries
 source("DataPreparation.R")
+source("DataPreparationAnalysis.R")
 grit = read.delim("data.csv")
 
 
-factorsGrit = fa(grit[,43:92],nfactors = 5,rotate = "varimax",fm="ml")
-gritValue = fa(grit[,3:14],nfactors = 1,rotate = "varimax",fm="ml")
+factorsGrit = fa(grit[, 43:92], nfactors = 5, rotate = "varimax", fm = "ml")
+gritValue   = fa(grit[, 3:14], nfactors = 1, rotate = "varimax", fm = "ml")
 summary(gritValue$scores)
 sd(gritValue$scores)
 
-gritQuestions = grit[,3:14]
-temp =rep(6,nrow(gritQuestions))
-for (i in c(1,4,6,9,10,12)){
-  gritQuestions[,i] = temp - gritQuestions[,i]
+gritQuestions = grit[, 3:14]
+temp          = rep(6, nrow(gritQuestions))
+for (i in c(1, 4, 6, 9, 10, 12)) {
+    gritQuestions[, i] = temp - gritQuestions[, i]
 }
-temp = rowSums(gritQuestions)/12
+temp            = rowSums(gritQuestions)/12
 
-gritEvaluation = fa.stats(grit[,43:92],factorsGrit$loadings)
-gritEvaluation2 = fa.stats(grit[,3:14],gritValue$loadings)
+gritEvaluation  = fa.stats(grit[, 43:92], factorsGrit$loadings)
+gritEvaluation2 = fa.stats(grit[, 3:14], gritValue$loadings)
 
-data.frame(factor.congruence(list(factorsGrit,factors1)))[6:10,0:5]
+data.frame(factor.congruence(factorsGrit, factors1))
 
+gritScores                = factorsGrit$scores
+fScores1                  = factors1$scores
+colnames(gritScores)      = c("Intro/Extra", "Neuro", "Agree", "Conscient", "Openess")
+gritScores                = data.frame(gritScores)
+gritScores$Neuro          = -1 * (gritScores$Neuro)
+gritScores2               = getDataSetWithBig5(grit, TRUE)
+temp                      = gritValue$scores
+colnames(temp)            = c("Grit")
+gritFactors               = cbind(grit[, 1], grit[, 31:42], gritScores2, temp)
+colnames(gritFactors)[1]  = "Country"
+gritFactors$realGrit      = rowSums(gritQuestions)/12
+gritFactors$realGrit      = gritFactors$realGrit - mean(gritFactors$realGrit)
+gritFactors$rescaled      = gritFactors$Grit * (sd(gritFactors$realGrit)/sd(gritFactors$Grit))
 
-gritScores = factorsGrit$scores
-colnames(gritScores)= c("Intro/Extra","Neuro","Agree","Conscient","Openess")
-gritScores = data.frame(gritScores)
-gritScores$Neuro = -1*(gritScores$Neuro)
-gritScores2 = getDataSetWithBig5(grit,TRUE)
-temp = gritValue$scores
-colnames(temp) = c("Grit")
-gritFactors = cbind(grit[,1],grit[,31:42],gritScores2,temp)
-colnames(gritFactors)[1] = "Country"
-gritFactors$realGrit = rowSums(gritQuestions)/12
-gritFactors$realGrit = gritFactors$realGrit - mean(gritFactors$realGrit)
-gritFactors$rescaled = gritFactors$Grit*(sd(gritFactors$realGrit)/sd(gritFactors$Grit))
+density1 = density(fScores1[, 1])
+density2 = density(gritScores[, 1])
+plot(density1, main = "Comparisson of Introversion/Extraversion Big5/Grit", col = "red", xlab = "Introversion/Extraversion")
+lines(density2, col = "blue")
+legend(x = "topright", y = NULL, legend = c("Big5", "Grit"), col = c("red", "blue"), pch = 15)
 
-density1 = density(fScores1[,1])
-density2 = density(gritScores[,1])
-plot(density1,main = "Comparisson of Introversion/Extraversion Big5/Grit",col = "red",xlab = "Introversion/Extraversion")
-lines(density2,col="blue")
-legend(x = "topright", y = NULL, legend=c("Big5", "Grit"),
-       col=c("red", "blue"),pch = 15)
+density1 = density(fScores1[, 2])
+density2 = density(gritScores[, 2])
+plot(density1, main = "Comparisson of Neuroticism Big5/Grit", col = "red", xlab = "Neuroticism")
+lines(density2, col = "blue")
+legend(x = "topright", y = NULL, legend = c("Big5", "Grit"), col = c("red", "blue"), pch = 15)
 
-density1 = density(fScores1[,2])
-density2 = density(gritScores[,2])
-plot(density1,main = "Comparisson of Neuroticism Big5/Grit",col = "red",xlab = "Neuroticism")
-lines(density2,col="blue")
-legend(x = "topright", y = NULL, legend=c("Big5", "Grit"),
-       col=c("red", "blue"),pch = 15)
+density1 = density(fScores1[, 3])
+density2 = density(gritScores[, 3])
+plot(density1, main = "Comparisson of Agreeableness Big5/Grit", col = "red", xlab = "Agreeableness")
+lines(density2, col = "blue")
+legend(x = "topright", y = NULL, legend = c("Big5", "Grit"), col = c("red", "blue"), pch = 15)
 
-density1 = density(fScores1[,3])
-density2 = density(gritScores[,3])
-plot(density1,main = "Comparisson of Agreeableness Big5/Grit",col = "red",xlab = "Agreeableness")
-lines(density2,col="blue")
-legend(x = "topright", y = NULL, legend=c("Big5", "Grit"),
-       col=c("red", "blue"),pch = 15)
+density1 = density(fScores1[, 4])
+density2 = density(gritScores[, 4])
+plot(density1, main = "Comparisson of Openness to Experience Big5/Grit", col = "red", xlab = "Openness to Experience")
+lines(density2, col = "blue")
+legend(x = "topright", y = NULL, legend = c("Big5", "Grit"), col = c("red", "blue"), pch = 15)
 
-density1 = density(fScores1[,4])
-density2 = density(gritScores[,4])
-plot(density1,main = "Comparisson of Openness to Experience Big5/Grit",col = "red",xlab = "Openness to Experience")
-lines(density2,col="blue")
-legend(x = "topright", y = NULL, legend=c("Big5", "Grit"),
-       col=c("red", "blue"),pch = 15)
+density1 = density(fScores1[, 5])
+density2 = density(gritScores[, 5])
+plot(density1, main = "Comparisson of Conscient. Big5/Grit", col = "red", xlab = "Conscient.")
+lines(density2, col = "blue")
+legend(x = "topright", y = NULL, legend = c("Big5", "Grit"), col = c("red", "blue"), pch = 15)
 
-density1 = density(fScores1[,5])
-density2 = density(gritScores[,5])
-plot(density1,main = "Comparisson of Conscient. Big5/Grit",col = "red",xlab = "Conscient.")
-lines(density2,col="blue")
-legend(x = "topright", y = NULL, legend=c("Big5", "Grit"),
-       col=c("red", "blue"),pch = 15)
-
-gritDensity = density(gritFactors[,19])
-realGritDensity = density(gritFactors[,20])
-scaledDenisty = density(gritFactors$rescaled)
-plot(gritDensity,main = "The Density Distribution of Grit",col = "red", xlab = "Grit",ylim = c(0,0.5))
-lines(realGritDensity,col="blue")
-lines(scaledDenisty,col="orange")
-legend(x = "topright", y = NULL, legend=c("Factor Grit", "Real Grit","Rescaled Grit"),
-       col=c("red", "blue","orange"),pch = 15)
+gritDensity     = density(gritFactors[, 19])
+realGritDensity = density(gritFactors[, 20])
+scaledDenisty   = density(gritFactors$rescaled)
+plot(gritDensity, main = "The Density Distribution of Grit", col = "red", xlab = "Grit", ylim = c(0, 0.5))
+lines(realGritDensity, col = "blue")
+lines(scaledDenisty, col = "orange")
+legend(x = "topright", y = NULL, legend = c("Factor Grit", "Real Grit", "Rescaled Grit"), col = c("red", "blue", "orange"), 
+    pch = 15)
 
 
-malesGrit = gritFactors[gritFactors$gender==1,]
-femalesGrit = gritFactors[gritFactors$gender==2,]
+malesGrit   = gritFactors[gritFactors$gender == 1, ]
+femalesGrit = gritFactors[gritFactors$gender == 2, ]
 fiveFactors = getFactors(data)
-males = fiveFactors[fiveFactors$gender==1,]
-females =fiveFactors[fiveFactors$gender==2,]
-t.test(males[,9],malesGrit[,14])
-t.test(females[,9],femalesGrit[,14])
+males       = fiveFactors[fiveFactors$gender == 1, ]
+females     = fiveFactors[fiveFactors$gender == 2, ]
+t.test(males[, 9], malesGrit[, 14])
+t.test(females[, 9], femalesGrit[, 14])
 
-weightsNonGrit = factors1$weights
-weightsGrit = factorsGrit$weights
+weightsNonGrit  = factors1$weights
+weightsGrit     = factorsGrit$weights
+
