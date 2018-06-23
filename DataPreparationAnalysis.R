@@ -50,6 +50,7 @@ getFactors = function(data) {
 
 # This space is for testing of data preparation
 pca1 = principal(data[, 8:57], nfactors = 5, rotate = "varimax")
+pca1b = principal(data[, 8:17], nfactors = 1, rotate = "varimax")
 pca2 = princomp(data[, 8:57])
 # pca2 = pcaFunc2(data) pca3 = pcaFunc3(data)
 
@@ -57,6 +58,7 @@ pca2 = princomp(data[, 8:57])
 # default uses the minres solution and oblimin rotation The factanal function uses maximum likelihood and varimax
 # rotation. factors = fa(data[,8:57],nfactors = 5)
 factors1 = fa(data[, 8:57], nfactors = 5, rotate = "varimax", fm = "ml")
+factors1b = fa(data[, 8:17], nfactors = 1, rotate = "varimax", fm = "ml")
 # factors1b = fa(data[,8:57],nfactors = 5,rotate = 'varimax') factors1c = fa(data[,8:57],nfactors = 5,fm='ml')
 # factors2 = factanal(data[,8:57], 5) fScores = data.frame(factors$scores) fScores1 = data.frame(factors1$scores)
 # fScores1b = data.frame(factors1b$scores) fScores1c = data.frame(factors1c$scores) coef =
@@ -71,14 +73,18 @@ pca1Evaluation      = fa.stats(data[, 8:57], pca1$loadings)
 
 
 # This shows the average difference in values comparing fa and factanal, both scaled. The first comparison is for the
-# default settings of fa vs. factanal.  The second comparisson is fa using varimax and ml vs. factanal. The average
-# difference in the first comparisson is quite significant with roughly 0.121. As expected the results of the second
-# comparisson are almost 0.  temp = fScores-fScores2Scaled sum(abs(temp))/19719/5 temp = fScores1-fScores2Scaled
+# default settings of fa vs. factanal.  The second comparison is fa using varimax and ml vs. factanal. The average
+# difference in the first comparison is quite significant with roughly 0.121. As expected the results of the second
+# comparison are almost 0.  temp = fScores-fScores2Scaled sum(abs(temp))/19719/5 temp = fScores1-fScores2Scaled
 # sum(abs(temp))/19719/5 temp = fScores1b-fScores2Scaled sum(abs(temp))/19719/5 temp = fScores1c-fScores2Scaled
 # sum(abs(temp))/19719/5 cov(data[,8:17]) cov(data[,18:27]) cov(data[,28:37]) cov(data[,38:47]) cov(data[,48:57])
 # scaled.pca = scale(pca2[,9:13]) pca3b= princomp(data[,8:57]) pca1b= principal(data[,8:57],nfactors = 5,rotate =
 # 'varimax')
-data.frame(factor.congruence(list(pca1, factors1)))[6:10, 0:5]
+data.frame(factor.congruence(pca1, factors1))
+factorLoadings  = data.frame(factors1$loadings[1:50,1:5])
+pcaLoadings     = data.frame(pca1$loadings[1:50,1:5])
+temp            = abs(pcaLoadings - factorLoadings) 
+sum(rowSums(temp))/250
 # data.frame(factor.congruence(list(pca1,factors2)))[6:10,0:5] fa.plot(fac1) create_faGraph = function(){ temp =
 # fa(data[,8:17],nfactors = 1) fa.diagram(temp) temp = fa(data[,18:27],nfactors = 1) fa.diagram(temp) temp =
 # fa(data[,28:37],nfactors = 1) fa.diagram(temp) temp = fa(data[,38:47],nfactors = 1) fa.diagram(temp) temp =

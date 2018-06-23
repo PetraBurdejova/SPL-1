@@ -37,31 +37,31 @@ gritFactors$rescaled      = gritFactors$Grit * (sd(gritFactors$realGrit)/sd(grit
 
 density1 = density(fScores1[, 1])
 density2 = density(gritScores[, 1])
-plot(density1, main = "Comparisson of Introversion/Extraversion Big5/Grit", col = "red", xlab = "Introversion/Extraversion")
+plot(density1, main = "Comparison of Introversion/Extraversion Big5/Grit", col = "red", xlab = "Introversion/Extraversion")
 lines(density2, col = "blue")
 legend(x = "topright", y = NULL, legend = c("Big5", "Grit"), col = c("red", "blue"), pch = 15)
 
 density1 = density(fScores1[, 2])
 density2 = density(gritScores[, 2])
-plot(density1, main = "Comparisson of Neuroticism Big5/Grit", col = "red", xlab = "Neuroticism")
+plot(density1, main = "Comparison of Neuroticism Big5/Grit", col = "red", xlab = "Neuroticism")
 lines(density2, col = "blue")
 legend(x = "topright", y = NULL, legend = c("Big5", "Grit"), col = c("red", "blue"), pch = 15)
 
 density1 = density(fScores1[, 3])
 density2 = density(gritScores[, 3])
-plot(density1, main = "Comparisson of Agreeableness Big5/Grit", col = "red", xlab = "Agreeableness")
+plot(density1, main = "Comparison of Agreeableness Big5/Grit", col = "red", xlab = "Agreeableness")
 lines(density2, col = "blue")
 legend(x = "topright", y = NULL, legend = c("Big5", "Grit"), col = c("red", "blue"), pch = 15)
 
 density1 = density(fScores1[, 4])
 density2 = density(gritScores[, 4])
-plot(density1, main = "Comparisson of Openness to Experience Big5/Grit", col = "red", xlab = "Openness to Experience")
+plot(density1, main = "Comparison of Openness to Experience Big5/Grit", col = "red", xlab = "Openness to Experience")
 lines(density2, col = "blue")
 legend(x = "topright", y = NULL, legend = c("Big5", "Grit"), col = c("red", "blue"), pch = 15)
 
 density1 = density(fScores1[, 5])
 density2 = density(gritScores[, 5])
-plot(density1, main = "Comparisson of Conscient. Big5/Grit", col = "red", xlab = "Conscient.")
+plot(density1, main = "Comparison of Conscient. Big5/Grit", col = "red", xlab = "Conscient.")
 lines(density2, col = "blue")
 legend(x = "topright", y = NULL, legend = c("Big5", "Grit"), col = c("red", "blue"), pch = 15)
 
