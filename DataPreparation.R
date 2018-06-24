@@ -24,7 +24,7 @@ clean = function() {
     x$source  = as.factor(x$source)
     
     # Replace unrealistic age valus
-    x[x$age > 100, ]$age = NaN
+    x[x$age > 100, ]$age = 0
     x$ageCat = findInterval(x$age, c(10, 20, 30, 40, 50, 60, 70, 80, 90))
     return(x)
 }

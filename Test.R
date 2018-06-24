@@ -18,7 +18,7 @@ data$hand <- as.factor(data$hand)
 data$source <- as.factor(data$source)
 
 #Replace unrealistic age valus
-data[data$age > 100,]$age <- NaN
+data[data$age > 100,]$age <- 0
 data$ageCat <- findInterval(data$age,c(10,20,30,40,50,60,70,80,90))
 #Principal Componant Analysis
 #This is the method which performs the PCA. I chose 5 factors since this corresonds to the Big 5.
@@ -50,12 +50,13 @@ avgAge7 <- apply(fiveFactors[fiveFactors$ageCat == 7,9:13],2,mean,na.rm=T)
 avgAge8 <- apply(fiveFactors[fiveFactors$ageCat == 8,9:13],2,mean,na.rm=T)
 avgAge9 <- apply(fiveFactors[fiveFactors$ageCat == 9,9:13],2,mean,na.rm=T)
 
-ages <- data.frame(rbind(avgAge1,avgAge2,avgAge3,avgAge4,avgAge5,avgAge6,avgAge7,avgAge8,avgAge9))
+ages <- data.frame(rbind(avgAge1,avgAge2,avgAge3,avgAge4,avgAge5,avgAge6,avgAge7))
 
-plot(c(1:9),ages$Intro.Extra,type = "l",col="blue",ylim = c(-1.8,1.8),xlab = "Age Category", ylab = "Values of Traits", main = "Average values of the five traits in different age groups")
+plot(c(1:7),ages$Intro.Extra,type = "l",col="blue",ylim = c(-1.8,1.8),xlab = "Age Category", ylab = "Values of Traits", main = "Average values of the five traits in different age groups")
 lines(ages$Neuro,col="red")
 lines(ages$Agree,col="green")
 lines(ages$Openess,col="orange")     
 lines(ages$Conscient,col="black")
 legend("topleft", inset=.05, title="Trait", c("Extra","Neuro","Agree","Openess","Conscient"), 
        fill=c("blue","red","green","orange","black"), horiz=TRUE,cex=0.70)
+
