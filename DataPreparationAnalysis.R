@@ -8,6 +8,10 @@ realValues = getDataSetWithBig5(data, FALSE)
 # seems to be supported with this quite simple test.
 vss(data[, 8:57], fm = "ml")
 fa.parallel(data[, 8:57], se.bars = T, fm = "ml")
+temp = princomp(data[, 8:57])
+screeplot(temp, npcs = 20)
+
+
 
 ev = eigen(cor(data[, 8:57]))  # get eigenvalues
 ap = parallel(subject = nrow(data[, 8:57]), var = ncol(data[, 8:57]), rep = 100, cent = 0.05)
@@ -27,8 +31,10 @@ psychPCA = function(data) {
 
 prcompPCA = function(data) {
     pca2 = prcomp(data[, 8:57], scale. = FALSE)
-    fviz_eig(pca2, ncp = 50)
-    pcaDF = cbind(data[, 1:7], data[, 58], (data.frame(pca2$x)[, 0:5]))
+    fviz_eig(pca2, ncp = 20)
+    tempDF = (data.frame(pca2$x)[, 0:5])
+    colnames(tempDF) = c("Intro", "Neuro", "Agree", "Conscient", "Openess")
+    pcaDF = cbind(data[, 1:7], data[, 58], tempDF)
     return(pcaDF)
 }
 
@@ -36,22 +42,26 @@ princompPCA = function(data) {
     pca3 = princomp(data[, 8:57])
     fviz_eig(pca3)
     pcaDF2 = data.frame(pca3$scores[, 0:5])
+    colnames(pcaDF2) = c("Intro", "Neuro", "Agree", "Conscient", "Openess")
+    pcaDF2 = data.frame(scale(pcaDF2))
     pcaDF2 = cbind(data[, 1:7], data[, 58], pcaDF2)
+    pcaDF2$Neuro = -1 * pcaDF2$Neuro
     return(pcaDF2)
 }
 
 getFactors = function(data) {
     temp              = fa(data[, 8:57], nfactors = 5, rotate = "varimax", fm = "ml")
     tempDF            = data.frame(temp$scores)
-    colnames(tempDF)  = c("Intro/Extra", "Neuro", "Agree", "Conscient", "Openess")
+    colnames(tempDF)  = c("Intro", "Neuro", "Agree", "Conscient", "Openess")
     tempDF$Neuro      = -1 * tempDF$Neuro
+    tempDF  = data.frame(scale(tempDF))
     return(cbind(data[, 1:7], data[, 58], tempDF))
 }
 
 # This space is for testing of data preparation
-pca1 = principal(data[, 8:57], nfactors = 5, rotate = "varimax")
+pca1 = principal(data[, 8:57], nfactors = 5, rotate = "varimax", scores = F)
 pca1b = principal(data[, 8:17], nfactors = 1, rotate = "varimax")
-pca2 = princomp(data[, 8:57])
+pca2 = princomp(data[, 8:57], scale = TRUE )
 # pca2 = pcaFunc2(data) pca3 = pcaFunc3(data)
 
 # Comparing two different functions for factor extraction. The first one 'fa' is from the 'psych' package and by
@@ -95,54 +105,54 @@ fa.graph(factors1)
 compareDesities = function(d) {
     realValues  = getDataSetWithBig5(d, F)
     oldValues   = getFactors(d)
-    pcaValues   = psychPCA(d)
+    pcaValues   = princompPCA(d)
     par(lwd = 2)
     
     real          = density(realValues$Extraversion)
-    estimatedFA   = density(oldValues$`Intro/Extra`)
-    estimatedPCA  = density(pcaValues$`Intro/Extra`)
-    plot(real, main = "The density distribution of Extraversion", col = "red", xlab = "Extraversion")
+    estimatedFA   = density(oldValues$Intro)
+    estimatedPCA  = density(pcaValues$Intro)
+    plot(estimatedPCA, main = "The density distribution of Extraversion", col = "green", xlab = "Extraversion")
     lines(estimatedFA, col = "blue")
-    lines(estimatedPCA, col = "green")
+    lines(real, col = "red")
     legend(x = "topright", y = NULL, legend = c("True", "FA", "PCA"), col = c("red", "blue", "green"), pch = 15)
     
     real          = density(realValues$Agreeableness)
     estimatedFA   = density(oldValues$Agree)
     estimatedPCA  = density(pcaValues$Agree)
-    plot(real, main = "The density distribution of Agreeableness", col = "red", xlab = "Agreeableness")
+    plot(estimatedPCA, main = "The density distribution of Agreeableness", col = "green", xlab = "Agreeableness")
     lines(estimatedFA, col = "blue")
-    lines(estimatedPCA, col = "green")
+    lines(real, col = "red")
     legend(x = "topright", y = NULL, legend = c("True", "FA", "PCA"), col = c("red", "blue", "green"), pch = 15)
     
     real          = density(realValues$Neuroticism)
     estimatedFA   = density(oldValues$Neuro)
     estimatedPCA  = density(pcaValues$Neuro)
-    plot(real, main = "The density distribution of Neuroticism", col = "red", xlab = "Neuroticism")
+    plot(estimatedPCA, main = "The density distribution of Neuroticism", col = "green", xlab = "Neuroticism")
     lines(estimatedFA, col = "blue")
-    lines(estimatedPCA, col = "green")
+    lines(real, col = "red")
     legend(x = "topright", y = NULL, legend = c("True", "FA", "PCA"), col = c("red", "blue", "green"), pch = 15)
     
     real          = density(realValues$Openess)
     estimatedFA   = density(oldValues$Openess)
     estimatedPCA  = density(pcaValues$Openess)
-    plot(real, main = "The density distribution of Openess", col = "red", xlab = "Openess")
+    plot(estimatedPCA, main = "The density distribution of Openess", col = "green", xlab = "Openess")
     lines(estimatedFA, col = "blue")
-    lines(estimatedPCA, col = "green")
+    lines(real, col = "red")
     legend(x = "topright", y = NULL, legend = c("True", "FA", "PCA"), col = c("red", "blue", "green"), pch = 15)
     
     real          = density(realValues$Conscientiousness)
     estimatedFA   = density(oldValues$Conscient)
     estimatedPCA  = density(pcaValues$Conscient)
-    plot(real, main = "The density distribution of Conscientiousness", col = "red", xlab = "Conscientiousness")
+    plot(estimatedPCA, main = "The density distribution of Conscientiousness", col = "green", xlab = "Conscientiousness")
     lines(estimatedFA, col = "blue")
-    lines(estimatedPCA, col = "green")
+    lines(real, col = "red")
     legend(x = "topright", y = NULL, legend = c("True", "FA", "PCA"), col = c("red", "blue", "green"), pch = 15)
     par(lwd = 1)
 }
-
+  
 realValues  = getDataSetWithBig5(data, F)
 oldValues   = getFactors(data)
-pcaValues   = psychPCA(data)
+pcaValues   = princompPCA(data)
 
 avgDiffFA   = abs(realValues[, 9:13] - oldValues[, 9:13])
 n           = nrow(avgDiffFA) * 5

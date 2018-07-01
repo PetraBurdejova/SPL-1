@@ -78,16 +78,17 @@ getDataSetWithBig5 = function(data, grit) {
     } else {
         tempSet = cbind(tempSet[, 1:7], tempSet[58:63])
     }
-    tempSet$Extraversion      = tempSet$Extraversion/10
-    tempSet$Extraversion      = tempSet$Extraversion - mean(tempSet$Extraversion)
-    tempSet$Neuroticism       = tempSet$Neuroticism/10
-    tempSet$Neuroticism       = tempSet$Neuroticism - mean(tempSet$Neuroticism)
-    tempSet$Openess           = tempSet$Openess/10
-    tempSet$Openess           = tempSet$Openess - mean(tempSet$Openess)
-    tempSet$Conscientiousness = tempSet$Conscientiousness/10
-    tempSet$Conscientiousness = tempSet$Conscientiousness - mean(tempSet$Conscientiousness)
-    tempSet$Agreeableness     = tempSet$Agreeableness/10
-    tempSet$Agreeableness     = tempSet$Agreeableness - mean(tempSet$Agreeableness)
+    tempSet[,9:13] = data.frame(scale(tempSet[,9:13]))
+    # tempSet$Extraversion      = tempSet$Extraversion/10
+    # tempSet$Extraversion      = tempSet$Extraversion - mean(tempSet$Extraversion)
+    # tempSet$Neuroticism       = tempSet$Neuroticism/10
+    # tempSet$Neuroticism       = tempSet$Neuroticism - mean(tempSet$Neuroticism)
+    # tempSet$Openess           = tempSet$Openess/10
+    # tempSet$Openess           = tempSet$Openess - mean(tempSet$Openess)
+    # tempSet$Conscientiousness = tempSet$Conscientiousness/10
+    # tempSet$Conscientiousness = tempSet$Conscientiousness - mean(tempSet$Conscientiousness)
+    # tempSet$Agreeableness     = tempSet$Agreeableness/10
+    # tempSet$Agreeableness     = tempSet$Agreeableness - mean(tempSet$Agreeableness)
     return(tempSet)
 }
 
