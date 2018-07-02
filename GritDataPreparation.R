@@ -31,8 +31,11 @@ temp                      = gritValue$scores
 colnames(temp)            = c("Grit")
 gritFactors               = cbind(grit[, 1], grit[, 31:42], gritScores2, temp)
 colnames(gritFactors)[1]  = "Country"
-gritFactors$realGrit      = rowSums(gritQuestions)/12
-gritFactors$realGrit      = gritFactors$realGrit - mean(gritFactors$realGrit)
+# gritFactors$realGrit      = rowSums(gritQuestions)/12
+# gritFactors$realGrit      = gritFactors$realGrit - mean(gritFactors$realGrit)
+# gritFactors$rescaled      = gritFactors$Grit * (sd(gritFactors$realGrit)/sd(gritFactors$Grit))
+gritFactors$realGrit      = rowSums(gritQuestions)
+gritFactors$realGrit      = scale(gritFactors$realGrit)
 gritFactors$rescaled      = gritFactors$Grit * (sd(gritFactors$realGrit)/sd(gritFactors$Grit))
 
 density1 = density(fScores1[, 1])
@@ -86,3 +89,14 @@ t.test(females[, 9], femalesGrit[, 14])
 weightsNonGrit  = factors1$weights
 weightsGrit     = factorsGrit$weights
 
+gritPredictor             = glm(realGrit ~ Extraversion + Neuroticism + Agreeableness + Openess + Conscientiousness +age +gender + education, data = gritFactors)
+summary(gritPredictor)
+gritFactors$predictedGRit = predict(gritPredictor, newdata = gritFactors)
+gritFactors$predictedGRit = scale(gritFactors$predictedGRit)
+temp                      = mean((gritFactors$realGrit - gritFactors$predictedGRit)^2)
+
+
+predictedGritDensity      = density(gritFactors$predictedGRit)
+plot(realGritDensity, main = "The Density Distribution of Grit", col = "red", xlab = "Grit", ylim = c(0, 0.5))
+lines(predictedGritDensity, col="blue")
+  

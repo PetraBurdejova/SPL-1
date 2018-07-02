@@ -61,7 +61,7 @@ getFactors = function(data) {
 # This space is for testing of data preparation
 pca1 = principal(data[, 8:57], nfactors = 5, rotate = "varimax", scores = F)
 pca1b = principal(data[, 8:17], nfactors = 1, rotate = "varimax")
-pca2 = princomp(data[, 8:57], scale = TRUE )
+pca2 = princomp(data[, 8:57])
 # pca2 = pcaFunc2(data) pca3 = pcaFunc3(data)
 
 # Comparing two different functions for factor extraction. The first one 'fa' is from the 'psych' package and by
