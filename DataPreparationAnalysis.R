@@ -9,8 +9,8 @@ realValues = getDataSetWithBig5(data, FALSE)
 vss(data[, 8:57], fm = "ml")
 fa.parallel(data[, 8:57], se.bars = T, fm = "ml")
 temp = princomp(data[, 8:57])
-screeplot(temp, npcs = 20)
-
+screeplot(temp, npcs = 15, main = "Screeplot for PCA")
+temp =  cov(data[,8:57])
 
 
 ev = eigen(cor(data[, 8:57]))  # get eigenvalues
@@ -79,7 +79,7 @@ factors1b = fa(data[, 8:17], nfactors = 1, rotate = "varimax", fm = "ml")
 # coef)
 
 factors1Evaluation  = fa.stats(data[, 8:57], factors1$loadings)
-pca1Evaluation      = fa.stats(data[, 8:57], pca1$loadings)
+pca1Evaluation      = fa.stats(data[, 8:57], pca2$loadings)
 
 
 # This shows the average difference in values comparing fa and factanal, both scaled. The first comparison is for the
@@ -90,7 +90,7 @@ pca1Evaluation      = fa.stats(data[, 8:57], pca1$loadings)
 # sum(abs(temp))/19719/5 cov(data[,8:17]) cov(data[,18:27]) cov(data[,28:37]) cov(data[,38:47]) cov(data[,48:57])
 # scaled.pca = scale(pca2[,9:13]) pca3b= princomp(data[,8:57]) pca1b= principal(data[,8:57],nfactors = 5,rotate =
 # 'varimax')
-data.frame(factor.congruence(pca1, factors1))
+data.frame(factor.congruence(pca2, factors1))
 factorLoadings  = data.frame(factors1$loadings[1:50,1:5])
 pcaLoadings     = data.frame(pca1$loadings[1:50,1:5])
 temp            = abs(pcaLoadings - factorLoadings) 
