@@ -109,7 +109,7 @@ compareDesities = function(d) {
       real          = density(realValues[,c(x)])
       estimatedFA   = density(oldValues[,c(x)])
       estimatedPCA  = density(pcaValues[,c(x)])
-      plot(estimatedFA, main = paste("The density distribution of",x), col = "blue", xlab = x)
+      plot(estimatedFA, main = paste("The density distribution of",x), col = "blue", xlab = x, xlim = c(-6,6))
       lines(real, col = "red")
       lines(estimatedPCA, col = "green")
       legend(x = "topright", y = NULL, legend = c("True", "FA", "PCA"), col = c("red", "blue", "green"), pch = 15)
