@@ -43,7 +43,6 @@ princompPCA = function(data) {
     fviz_eig(pca3)
     pcaDF2 = data.frame(pca3$scores[, 0:5])
     colnames(pcaDF2) = c("Intro", "Neuro", "Agree", "Conscient", "Openess")
-    pcaDF2 = data.frame(scale(pcaDF2))
     pcaDF2 = cbind(data[, 1:7], data[, 58], pcaDF2)
     pcaDF2$Neuro = -1 * pcaDF2$Neuro
     return(pcaDF2)
@@ -54,7 +53,6 @@ getFactors = function(data) {
     tempDF            = data.frame(temp$scores)
     colnames(tempDF)  = c("Intro", "Neuro", "Agree", "Conscient", "Openess")
     tempDF$Neuro      = -1 * tempDF$Neuro
-    tempDF  = data.frame(scale(tempDF))
     return(cbind(data[, 1:7], data[, 58], tempDF))
 }
 
@@ -105,48 +103,18 @@ fa.graph(factors1)
 compareDesities = function(d) {
     realValues  = getDataSetWithBig5(d, F)
     oldValues   = getFactors(d)
-    pcaValues   = princompPCA(d)
+    pcaValues   = prcompPCA(d)
     par(lwd = 2)
+    for( x in  c("Intro", "Neuro", "Agree", "Conscient", "Openess")){
+      real          = density(realValues[,c(x)])
+      estimatedFA   = density(oldValues[,c(x)])
+      estimatedPCA  = density(pcaValues[,c(x)])
+      plot(estimatedFA, main = paste("The density distribution of",x), col = "blue", xlab = x)
+      lines(real, col = "red")
+      lines(estimatedPCA, col = "green")
+      legend(x = "topright", y = NULL, legend = c("True", "FA", "PCA"), col = c("red", "blue", "green"), pch = 15)
+    }
     
-    real          = density(realValues$Extraversion)
-    estimatedFA   = density(oldValues$Intro)
-    estimatedPCA  = density(pcaValues$Intro)
-    plot(estimatedPCA, main = "The density distribution of Extraversion", col = "green", xlab = "Extraversion")
-    lines(estimatedFA, col = "blue")
-    lines(real, col = "red")
-    legend(x = "topright", y = NULL, legend = c("True", "FA", "PCA"), col = c("red", "blue", "green"), pch = 15)
-    
-    real          = density(realValues$Agreeableness)
-    estimatedFA   = density(oldValues$Agree)
-    estimatedPCA  = density(pcaValues$Agree)
-    plot(estimatedPCA, main = "The density distribution of Agreeableness", col = "green", xlab = "Agreeableness")
-    lines(estimatedFA, col = "blue")
-    lines(real, col = "red")
-    legend(x = "topright", y = NULL, legend = c("True", "FA", "PCA"), col = c("red", "blue", "green"), pch = 15)
-    
-    real          = density(realValues$Neuroticism)
-    estimatedFA   = density(oldValues$Neuro)
-    estimatedPCA  = density(pcaValues$Neuro)
-    plot(estimatedPCA, main = "The density distribution of Neuroticism", col = "green", xlab = "Neuroticism")
-    lines(estimatedFA, col = "blue")
-    lines(real, col = "red")
-    legend(x = "topright", y = NULL, legend = c("True", "FA", "PCA"), col = c("red", "blue", "green"), pch = 15)
-    
-    real          = density(realValues$Openess)
-    estimatedFA   = density(oldValues$Openess)
-    estimatedPCA  = density(pcaValues$Openess)
-    plot(estimatedPCA, main = "The density distribution of Openess", col = "green", xlab = "Openess")
-    lines(estimatedFA, col = "blue")
-    lines(real, col = "red")
-    legend(x = "topright", y = NULL, legend = c("True", "FA", "PCA"), col = c("red", "blue", "green"), pch = 15)
-    
-    real          = density(realValues$Conscientiousness)
-    estimatedFA   = density(oldValues$Conscient)
-    estimatedPCA  = density(pcaValues$Conscient)
-    plot(estimatedPCA, main = "The density distribution of Conscientiousness", col = "green", xlab = "Conscientiousness")
-    lines(estimatedFA, col = "blue")
-    lines(real, col = "red")
-    legend(x = "topright", y = NULL, legend = c("True", "FA", "PCA"), col = c("red", "blue", "green"), pch = 15)
     par(lwd = 1)
 }
   
@@ -167,4 +135,3 @@ summary(realValues[, 9:13])
 summary(oldValues[, 9:13])
 summary(pcaValues[, 9:13])
 compareDesities(data)
-
