@@ -62,34 +62,28 @@ getResults = function(dataSet) {
     for (c in change) {
         openess[, c] = 6 - openess[, c]
     }
-    dataSet$Extraversion      = rowSums(extraversion)
-    dataSet$Neuroticism       = rowSums(neuroticism)
-    dataSet$Agreeableness     = rowSums(agreeableness)
-    dataSet$Conscientiousness = rowSums(conscientiousness)
-    dataSet$Openess           = rowSums(openess)
+    dataSet$Intro       = rowSums(extraversion)
+    dataSet$Neuro       = rowSums(neuroticism)
+    dataSet$Agree       = rowSums(agreeableness)
+    dataSet$Conscient   = rowSums(conscientiousness)
+    dataSet$Openess     = rowSums(openess)
     return(dataSet)
 }
 
 
-getDataSetWithBig5 = function(data, grit) {
+getDataSetWithBig5 = function(data, grit, scale) {
     tempSet = getResults(data)
     if (grit) {
         tempSet = tempSet[, 99:103]
-        tempSet[,1:5] = data.frame(scale(tempSet[,1:5]))
+        if(scale){
+          tempSet[,1:5] = data.frame(scale(tempSet[,1:5]))
+        }
     } else {
         tempSet = cbind(tempSet[, 1:7], tempSet[58:63])
-        tempSet[,9:13] = data.frame(scale(tempSet[,9:13]))
+        if(scale){
+          tempSet[,9:13] = data.frame(scale(tempSet[,9:13]))
+        }
     }
-    # tempSet$Extraversion      = tempSet$Extraversion/10
-    # tempSet$Extraversion      = tempSet$Extraversion - mean(tempSet$Extraversion)
-    # tempSet$Neuroticism       = tempSet$Neuroticism/10
-    # tempSet$Neuroticism       = tempSet$Neuroticism - mean(tempSet$Neuroticism)
-    # tempSet$Openess           = tempSet$Openess/10
-    # tempSet$Openess           = tempSet$Openess - mean(tempSet$Openess)
-    # tempSet$Conscientiousness = tempSet$Conscientiousness/10
-    # tempSet$Conscientiousness = tempSet$Conscientiousness - mean(tempSet$Conscientiousness)
-    # tempSet$Agreeableness     = tempSet$Agreeableness/10
-    # tempSet$Agreeableness     = tempSet$Agreeableness - mean(tempSet$Agreeableness)
     return(tempSet)
 }
 

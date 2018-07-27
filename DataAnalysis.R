@@ -1,5 +1,5 @@
 source("DataPreparation.R")
-fiveFactors <- getDataSetWithBig5(data,FALSE)
+fiveFactors <- getDataSetWithBig5(data,FALSE,F)
 
 #Count occurances of country levels in males
 temp <- count(males, "country")

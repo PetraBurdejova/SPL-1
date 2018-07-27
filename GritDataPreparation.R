@@ -15,6 +15,7 @@ for (i in c(1, 4, 6, 9, 10, 12)) {
     gritQuestions[, i] = temp - gritQuestions[, i]
 }
 temp            = rowSums(gritQuestions)/12
+temp2 = getDataSetWithBig5(grit,T,F)
 
 gritEvaluation  = fa.stats(grit[, 43:92], factorsGrit$loadings)
 gritEvaluation2 = fa.stats(grit[, 3:14], gritValue$loadings)
@@ -26,7 +27,7 @@ fScores1                  = factors1$scores
 colnames(gritScores)      = c("Intro/Extra", "Neuro", "Agree", "Conscient", "Openess")
 gritScores                = data.frame(gritScores)
 gritScores$Neuro          = -1 * (gritScores$Neuro)
-gritScores2               = getDataSetWithBig5(grit, TRUE)
+gritScores2               = getDataSetWithBig5(grit, TRUE,F)
 temp                      = gritValue$scores
 colnames(temp)            = c("Grit")
 gritFactors               = cbind(grit[, 1], grit[, 31:42], gritScores2, temp)

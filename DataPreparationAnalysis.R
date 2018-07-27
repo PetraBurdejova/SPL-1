@@ -2,7 +2,7 @@ source("DataPreparation.R")
 if (!require("compare")) install.packages("compare")
 library("compare")
 
-realValues = getDataSetWithBig5(data, FALSE)
+realValues = getDataSetWithBig5(data, FALSE,T)
 
 # Analyse how many factors to extract. Of course we want 5 since those are the personality traits measured. This
 # seems to be supported with this quite simple test.
@@ -103,7 +103,7 @@ fa.graph(factors1)
 compareDesities = function(d) {
     realValues  = getDataSetWithBig5(d, F)
     oldValues   = getFactors(d)
-    pcaValues   = prcompPCA(d)
+    pcaValues   = princompPCA(d)
     par(lwd = 2)
     for( x in  c("Intro", "Neuro", "Agree", "Conscient", "Openess")){
       real          = density(realValues[,c(x)])
@@ -118,7 +118,7 @@ compareDesities = function(d) {
     par(lwd = 1)
 }
   
-realValues  = getDataSetWithBig5(data, F)
+realValues  = getDataSetWithBig5(data, F,T)
 oldValues   = getFactors(data)
 pcaValues   = princompPCA(data)
 
