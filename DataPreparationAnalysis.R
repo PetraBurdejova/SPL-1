@@ -101,7 +101,7 @@ fa.diagram(factors1)
 fa.graph(factors1)
 
 compareDesities = function(d) {
-    realValues  = getDataSetWithBig5(d, F)
+    realValues  = getDataSetWithBig5(d, F,T)
     oldValues   = getFactors(d)
     pcaValues   = princompPCA(d)
     par(lwd = 2)
