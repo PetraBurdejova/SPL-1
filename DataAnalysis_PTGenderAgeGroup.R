@@ -2,7 +2,7 @@
 
 source("DataPreparation.R")
 
-fiveFactors = getDataSetWithBig5(data, FALSE,T)
+fiveFactors = getDataSetWithBig5(data, FALSE,F)
 
 #All People
 avgAge1 <- apply(fiveFactors[fiveFactors$ageCat == 1,9:13],2,mean,na.rm=T)
@@ -50,7 +50,7 @@ fages <- data.frame(rbind(favgAge1,favgAge2,favgAge3,favgAge4,favgAge5,favgAge6,
 
 #Extraversion
 
-plot(c(1:7),mages$Intro,type = "l",col="red",ylim = c(-0.5,1.0)
+plot(c(1:7),mages$Intro,type = "l",col="red",ylim = c(min(mages$Intro)-.1*min(mages$Intro),max(mages$Intro)+.1*max(mages$Intro))
      ,xlab = "Age Category", ylab = "Values of Traits", 
      main = "Average values of Extraversion between males and females over the age", cex.main=0.9)
 lines(fages$Intro,col="blue")
@@ -60,7 +60,7 @@ legend("topleft", inset=.05, c("Male","Female","All"), fill=c("red","blue","grey
 #openness
 
 
-plot(c(1:7),mages$Openess,type = "l",col="red",ylim = c(-1.8,1.0)
+plot(c(1:7),mages$Openess,type = "l",col="red",ylim = c(min(mages$Openess)-.1*min(mages$Openess),max(mages$Openess)+.1*max(mages$Openess))
      ,xlab = "Age Category", ylab = "Values of Traits", 
      main = "Average values of Openness between males and females over the age", cex.main=0.9)
 lines(fages$Openess,col="blue")
@@ -71,7 +71,7 @@ legend("topleft", inset=.05, c("Male","Female","All"), fill=c("red","blue","grey
 #Conscientiousness
 
 
-plot(c(1:7),mages$Conscient,type = "l",col="red",ylim = c(-1.8,1.0)
+plot(c(1:7),mages$Conscient,type = "l",col="red",ylim = c(min(mages$Conscient)-.1*min(mages$Conscient),max(mages$Conscient)+.1*max(mages$Conscient))
      ,xlab = "Age Category", ylab = "Values of Traits", 
      main = "Avg values of Conscientiousness between males and females over the age", cex.main=0.9)
 lines(fages$Conscient,col="blue")
@@ -83,7 +83,7 @@ legend("topleft", inset=.05, c("Male","Female","All"), fill=c("red","blue","grey
 #Agreeableness
 
 
-plot(c(1:7),mages$Agree,type = "l",col="red",ylim = c(-1.8,1.0)
+plot(c(1:7),mages$Agree,type = "l",col="red",ylim = c(min(mages$Agree)-.1*min(mages$Agree),max(mages$Agree)+.1*max(mages$Agree))
      ,xlab = "Age Category", ylab = "Values of Traits", 
      main = "Avg values of Agreeableness between males and females over the age", cex.main=0.9)
 lines(fages$Agree,col="blue")
@@ -95,7 +95,7 @@ legend("topleft", inset=.05, c("Male","Female","All"), fill=c("red","blue","grey
 #Neuroticism
 
 
-plot(c(1:7),mages$Neuro,type = "l",col="red",ylim = c(-3.0,2.0)
+plot(c(1:7),mages$Neuro,type = "l",col="red",ylim = c(min(mages$Neuro)-.2*min(mages$Neuro),max(mages$Neuro)+.1*max(mages$Neuro))
      ,xlab = "Age Category", ylab = "Values of Traits", 
      main = "Avg values of Neuroticism between males and females over the age", cex.main=0.9)
 lines(fages$Neuro,col="blue")
