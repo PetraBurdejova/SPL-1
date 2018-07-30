@@ -90,7 +90,7 @@ t.test(females[, 9], femalesGrit[, 14])
 weightsNonGrit  = factors1$weights
 weightsGrit     = factorsGrit$weights
 
-gritPredictor             = glm(realGrit ~ Extraversion + Neuroticism + Agreeableness + Openess + Conscientiousness +age +gender + education, data = gritFactors)
+gritPredictor             = glm(realGrit ~ Intro + Neuro + Agree + Openess + Conscient +age +gender + education, data = gritFactors)
 summary(gritPredictor)
 gritFactors$predictedGRit = predict(gritPredictor, newdata = gritFactors)
 gritFactors$predictedGRit = scale(gritFactors$predictedGRit)
