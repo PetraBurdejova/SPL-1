@@ -2,7 +2,8 @@
 source("DataPreparation.R")
 source("DataPreparationAnalysis.R")
 grit = read.delim("data.csv")
-
+if (!require("glmnet")) install.packages("glmnet")
+library("glmnet")
 
 factorsGrit = fa(grit[, 43:92], nfactors = 5, rotate = "varimax", fm = "ml")
 gritValue   = fa(grit[, 3:14], nfactors = 1, rotate = "varimax", fm = "ml")
@@ -36,7 +37,7 @@ colnames(gritFactors)[1]  = "Country"
 # gritFactors$realGrit      = gritFactors$realGrit - mean(gritFactors$realGrit)
 # gritFactors$rescaled      = gritFactors$Grit * (sd(gritFactors$realGrit)/sd(gritFactors$Grit))
 gritFactors$realGrit      = rowSums(gritQuestions)
-gritFactors$realGrit      = scale(gritFactors$realGrit)
+#gritFactors$realGrit      = scale(gritFactors$realGrit)
 gritFactors$rescaled      = gritFactors$Grit * (sd(gritFactors$realGrit)/sd(gritFactors$Grit))
 
 density1 = density(fScores1[, 1])
@@ -90,10 +91,15 @@ t.test(females[, 9], femalesGrit[, 14])
 weightsNonGrit  = factors1$weights
 weightsGrit     = factorsGrit$weights
 
-gritPredictor             = glm(realGrit ~ Intro + Neuro + Agree + Openess + Conscient +age +gender + education, data = gritFactors)
+
+
+name = colnames(gritFactors)
+name = name[-c(19,21,22,23)]
+gritPredictor             = lm(realGrit ~ Intro + Neuro + Agree + Openess + Conscient +age +gender + education, data = gritFactors)
+#gritPredictor             = glmnet(as.matrix(gritFactors[,c("Intro","Agree","Neuro","Conscient","Openess")]), gritFactors$realGrit,alpha = 1,lambda = 0)
 summary(gritPredictor)
 gritFactors$predictedGRit = predict(gritPredictor, newdata = gritFactors)
-gritFactors$predictedGRit = scale(gritFactors$predictedGRit)
+#gritFactors$predictedGRit = scale(gritFactors$predictedGRit)
 temp                      = mean((gritFactors$realGrit - gritFactors$predictedGRit)^2)
 
 
@@ -101,3 +107,23 @@ predictedGritDensity      = density(gritFactors$predictedGRit)
 plot(realGritDensity, main = "The Density Distribution of Grit", col = "red", xlab = "Grit", ylim = c(0, 0.5))
 lines(predictedGritDensity, col="blue")
   
+res = gritPredictor$residuals
+plot(sort(res),type = "l")
+density1 = density(res)
+h = hist(res,breaks = 40, col = "red")
+xfit<-seq(min(res),max(res),length=40)
+yfit<-dnorm(xfit,mean=mean(res),sd=sd(res))
+yfit <- yfit*diff(h$mids[1:2])*length(res)
+lines(xfit, yfit, col="blue", lwd=2) 
+
+quantile(gritFactors$realGrit,0.05)
+quantile(gritFactors$realGrit,0.95)
+quantile(gritFactors$predictedGRit, 0.05)
+quantile(gritFactors$predictedGRit, 0.95)
+
+density1 = density(gritFactors$realGrit)
+density2 = density(gritFactors$predictedGRit)
+plot(density1, main = "Comparison of real vs. predicted Grit", col = "red", xlab = "Grit", ylim = c(0,0.07))
+lines(density2, col = "blue")
+legend(x = "topright", y = NULL, legend = c("Real", "Predicted"), col = c("red", "blue"), pch = 15)
+
