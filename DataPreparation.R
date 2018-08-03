@@ -32,8 +32,7 @@ clean = function() {
 data = clean()
 
 
-# Functions to get the 'real' values according to the evaluation key The results have been rescaled by dividing them
-# through 10 and shifting the mean to 0
+# Functions to get the 'real' values according to the evaluation key.
 getResults = function(dataSet) {
     start               = which(colnames(dataSet) == "E1")
     extraversion        = dataSet[, start:(start + 9)]
@@ -73,15 +72,16 @@ getResults = function(dataSet) {
 
 getDataSetWithBig5 = function(data, grit, scale) {
     tempSet = getResults(data)
+    names   = c("Intro","Neuro","Agree","Conscient","Openess")
     if (grit) {
-        tempSet = tempSet[, 99:103]
+        tempSet = tempSet[, names]
         if(scale){
           tempSet[,1:5] = data.frame(scale(tempSet[,1:5]))
         }
     } else {
-        tempSet = cbind(tempSet[, 1:7], tempSet[58:63])
+        tempSet = cbind(tempSet[, 1:7], tempSet[,names])
         if(scale){
-          tempSet[,9:13] = data.frame(scale(tempSet[,9:13]))
+          tempSet[,8:12] = data.frame(scale(tempSet[,8:12]))
         }
     }
     return(tempSet)

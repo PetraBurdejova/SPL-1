@@ -3,7 +3,7 @@ if (!require("compare")) install.packages("compare")
 library("compare")
 
 realValues = getDataSetWithBig5(data, FALSE,T)
-
+names      = c("Intro", "Neuro", "Agree", "Conscient", "Openess")
 # Analyse how many factors to extract. Of course we want 5 since those are the personality traits measured. This
 # seems to be supported with this quite simple test.
 vss(data[, 8:57], fm = "ml")
@@ -22,15 +22,16 @@ par(col = "black")
 # Principal Componant Analysis This is the method which performs the PCA. I chose 5 factors since this corresonds to
 # the Big 5.
 psychPCA = function(data) {
-    pca                   = principal(data[, 8:57], nfactors = 5, rotate = "varimax")
+    pca                   = principal(data[, 8:57], nfactors = 5, rotate = "none")
     fiveFactors           = data.frame(pca$scores)
-    colnames(fiveFactors) = c("Intro/Extra", "Neuro", "Agree", "Conscient", "Openess")
+    colnames(fiveFactors) = c("Intro", "Neuro", "Agree", "Conscient", "Openess")
     fiveFactors           = cbind(data[, 1:7], data[, 58], fiveFactors)
+    fiveFactors$Neuro     = -1 * fiveFactors$Neuro
     return(fiveFactors)
 }
 
 prcompPCA = function(data) {
-    pca2 = prcomp(data[, 8:57], scale. = FALSE)
+    pca2 = prcomp(data[, 8:57], scale. = F)
     fviz_eig(pca2, ncp = 20)
     tempDF = (data.frame(pca2$x)[, 0:5])
     colnames(tempDF) = c("Intro", "Neuro", "Agree", "Conscient", "Openess")
@@ -103,9 +104,9 @@ fa.graph(factors1)
 compareDesities = function(d) {
     realValues  = getDataSetWithBig5(d, F,T)
     oldValues   = getFactors(d)
-    pcaValues   = princompPCA(d)
+    pcaValues   = psychPCA(d)
     par(lwd = 2)
-    for( x in  c("Intro", "Neuro", "Agree", "Conscient", "Openess")){
+    for( x in  names){
       real          = density(realValues[,c(x)])
       estimatedFA   = density(oldValues[,c(x)])
       estimatedPCA  = density(pcaValues[,c(x)])
@@ -120,18 +121,18 @@ compareDesities = function(d) {
   
 realValues  = getDataSetWithBig5(data, F,T)
 oldValues   = getFactors(data)
-pcaValues   = princompPCA(data)
+pcaValues   = psychPCA(data)
 
-avgDiffFA   = abs(realValues[, 9:13] - oldValues[, 9:13])
+avgDiffFA   = abs(realValues[, names] - oldValues[,names])
 n           = nrow(avgDiffFA) * 5
 avgDiffFA   = rowSums(avgDiffFA)
 avgDiffFA   = sum(avgDiffFA)/n
 
-avgDiffPCA  = abs(realValues[, 9:13] - pcaValues[, 9:13])
+avgDiffPCA  = abs(realValues[, names] - pcaValues[, names])
 avgDiffPCA  = rowSums(avgDiffPCA)
 avgDiffPCA  = sum(avgDiffPCA)/n
 
-summary(realValues[, 9:13])
-summary(oldValues[, 9:13])
-summary(pcaValues[, 9:13])
+summary(realValues[, names])
+summary(oldValues[, names])
+summary(pcaValues[, names])
 compareDesities(data)

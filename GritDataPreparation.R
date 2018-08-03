@@ -116,6 +116,8 @@ yfit<-dnorm(xfit,mean=mean(res),sd=sd(res))
 yfit <- yfit*diff(h$mids[1:2])*length(res)
 lines(xfit, yfit, col="blue", lwd=2) 
 
+qqnorm(res)
+
 quantile(gritFactors$realGrit,0.05)
 quantile(gritFactors$realGrit,0.95)
 quantile(gritFactors$predictedGRit, 0.05)
@@ -126,4 +128,28 @@ density2 = density(gritFactors$predictedGRit)
 plot(density1, main = "Comparison of real vs. predicted Grit", col = "red", xlab = "Grit", ylim = c(0,0.07))
 lines(density2, col = "blue")
 legend(x = "topright", y = NULL, legend = c("Real", "Predicted"), col = c("red", "blue"), pch = 15)
+
+
+regressors = c("Intro", "Neuro", "Agree", "Openess", "Conscient", "age", "gender", "education")
+target = c("realGrit")
+
+addingRegressors = function(regressors, target, dataSet){
+  RSS            = double()
+  for(x in regressors){
+    tempString    = c(tempString,x)
+    gritPredictor = lm(as.formula(paste(target, paste(tempString, collapse=" + "), sep=" ~ ")), data = dataSet)
+    tempRSS       = mean(gritPredictor$residuals * gritPredictor$residuals)
+    RSS           = c(RSS, tempRSS)
+  }
+  names(RSS) = regressors
+  return(RSS)
+}
+
+
+temp = addingRegressors(regressors,target, gritFactors)
+plot(temp, xaxt = "n", type = "l", ylab = "Residual Sum of Squares", xlab = "Regressor", main = "RSS changes when adding new Regressors")
+axis(1, at = 1:8, labels = regressors, las = 2)
+
+
+
 
