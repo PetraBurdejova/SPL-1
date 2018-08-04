@@ -57,24 +57,23 @@ ggplot(data = right, aes(x = ageCat, y=Intro)) +
 # Openness
 ggplot(df, aes(x=Openess, color=hand)) +
   geom_density() + theme_light() +
-  xlim(-4, 3) +
+  xlim(0, 60) +
   labs(title="Openness density curve", x="Openness", y="Density")
 
 # Conscientiousness
 ggplot(df, aes(x=Conscient, color=hand)) +
   geom_density() + theme_light() +
-  xlim(-3.5, 3) +
+  xlim(0, 60) +
   labs(title="Conscientiousness density curve", x="Conscientiousness", y="Density")
 
 # Agreeableness
 ggplot(df, aes(x=Agree, color=hand)) +
   geom_density() + theme_light() +
-  xlim(-5, 3) +
+  xlim(0, 60) +
   labs(title="Agreeableness density curve", x="Agreeableness", y="Density")
 
 # Neuroticism
 ggplot(df, aes(x=Neuro, color=hand)) +
   geom_density() + theme_light() +
-  xlim(-3.5, 3.5) +
+  xlim(0, 60) +
   labs(title="Neuroticism density curve", x="Neuroticism", y="Density")
-
