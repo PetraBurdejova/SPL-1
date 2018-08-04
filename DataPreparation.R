@@ -15,21 +15,47 @@ if (!require("formatR")) install.packages("formatR")
 library(formatR)
 
 # import data
-clean = function() {
-    x         = read_excel("Big5.xlsx")
+clean = function(sourceFile) {
+  tryCatch({
+    x = read_excel(sourceFile)
     x$country = as.factor(x$country)
     x$race    = as.factor(x$race)
     x$gender  = as.factor(x$gender)
     x$hand    = as.factor(x$hand)
-    x$source  = as.factor(x$source)
+    if(is.null(x$source)){
+      x$source  = 6
+    }    else{
+      x$source  = as.factor(x$source)
+    }
+    
     
     # Replace unrealistic age valus
     x[x$age > 100, ]$age = 0
     x$ageCat = findInterval(x$age, c(10, 20, 30, 40, 50, 60, 70, 80, 90))
     return(x)
+    }, error = function(e) e)
+  tryCatch({
+    x = read.delim(sourceFile)
+    x$country = as.factor(x$country)
+    x$race    = as.factor(x$race)
+    x$gender  = as.factor(x$gender)
+    x$hand    = as.factor(x$hand)
+    if(is.null(x$source)){
+      x$source  = 5
+    }    else{
+      x$source  = as.factor(x$source)
+    }
+    
+    
+    
+    # Replace unrealistic age valus
+    x[x$age > 100, ]$age = 0
+    x$ageCat = findInterval(x$age, c(10, 20, 30, 40, 50, 60, 70, 80, 90))
+    },error = function(e) e)
+  return(x)
 }
 
-data = clean()
+data = clean("Big5.xlsx")
 
 
 # Functions to get the 'real' values according to the evaluation key.
@@ -79,11 +105,10 @@ getDataSetWithBig5 = function(data, grit, scale) {
           tempSet[,1:5] = data.frame(scale(tempSet[,1:5]))
         }
     } else {
-        tempSet = cbind(tempSet[, 1:7], tempSet[,names])
+        tempSet = cbind(tempSet[, c("country", "gender", "engnat", "age", "hand","race", "ageCat", "source")], tempSet[,names])
         if(scale){
-          tempSet[,8:12] = data.frame(scale(tempSet[,8:12]))
+          tempSet[,names] = data.frame(scale(tempSet[,names]))
         }
     }
     return(tempSet)
 }
-

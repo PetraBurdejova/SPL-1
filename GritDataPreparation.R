@@ -1,44 +1,48 @@
 # import required libraries
 source("DataPreparation.R")
 source("DataPreparationAnalysis.R")
-grit = read.delim("data.csv")
 if (!require("glmnet")) install.packages("glmnet")
 library("glmnet")
 
-factorsGrit = fa(grit[, 43:92], nfactors = 5, rotate = "varimax", fm = "ml")
-gritValue   = fa(grit[, 3:14], nfactors = 1, rotate = "varimax", fm = "ml")
-summary(gritValue$scores)
-sd(gritValue$scores)
 
-gritQuestions = grit[, 3:14]
-temp          = rep(6, nrow(gritQuestions))
-for (i in c(1, 4, 6, 9, 10, 12)) {
+
+getGritDF = function(){
+  grit = clean("data.csv")
+  factorsGrit = fa(grit[, 43:92], nfactors = 5, rotate = "varimax", fm = "ml")
+  gritValue   = fa(grit[, 3:14], nfactors = 1, rotate = "varimax", fm = "ml")
+  #summary(gritValue$scores)
+  #sd(gritValue$scores)
+  #gritEvaluation  = fa.stats(grit[, 43:92], factorsGrit$loadings)
+  #gritEvaluation2 = fa.stats(grit[, 3:14], gritValue$loadings)
+  #data.frame(factor.congruence(factorsGrit, factors1))
+  gritQuestions = grit[, 3:14]
+  temp          = rep(6, nrow(gritQuestions))
+  for (i in c(1, 4, 6, 9, 10, 12)) {
     gritQuestions[, i] = temp - gritQuestions[, i]
+  }
+  temp            = rowSums(gritQuestions)/12
+  temp2 = getDataSetWithBig5(grit,T,F)
+  gritScores                = factorsGrit$scores
+  #fScores1                  = factors1$scores
+  colnames(gritScores)      = c("Intro/Extra", "Neuro", "Agree", "Conscient", "Openess")
+  gritScores                = data.frame(gritScores)
+  gritScores$Neuro          = -1 * (gritScores$Neuro)
+  gritScores2               = getDataSetWithBig5(grit, TRUE,F)
+  temp                      = gritValue$scores
+  colnames(temp)            = c("Grit")
+  gritFactors               = cbind(grit[, c("country", "education", "urban", "gender", "engnat", "age", "hand", "religion", "orientation","race","voted","married", "familysize", "ageCat", "source")], gritScores2, temp)
+  #colnames(gritFactors)[1]  = "Country"
+  # gritFactors$realGrit      = rowSums(gritQuestions)/12
+  # gritFactors$realGrit      = gritFactors$realGrit - mean(gritFactors$realGrit)
+  # gritFactors$rescaled      = gritFactors$Grit * (sd(gritFactors$realGrit)/sd(gritFactors$Grit))
+  gritFactors$realGrit      = rowSums(gritQuestions)
+  #gritFactors$realGrit      = scale(gritFactors$realGrit)
+  gritFactors$rescaled      = gritFactors$Grit * (sd(gritFactors$realGrit)/sd(gritFactors$Grit))
+  return(gritFactors)
 }
-temp            = rowSums(gritQuestions)/12
-temp2 = getDataSetWithBig5(grit,T,F)
 
-gritEvaluation  = fa.stats(grit[, 43:92], factorsGrit$loadings)
-gritEvaluation2 = fa.stats(grit[, 3:14], gritValue$loadings)
+gritFactors = getGritDF()
 
-data.frame(factor.congruence(factorsGrit, factors1))
-
-gritScores                = factorsGrit$scores
-fScores1                  = factors1$scores
-colnames(gritScores)      = c("Intro/Extra", "Neuro", "Agree", "Conscient", "Openess")
-gritScores                = data.frame(gritScores)
-gritScores$Neuro          = -1 * (gritScores$Neuro)
-gritScores2               = getDataSetWithBig5(grit, TRUE,F)
-temp                      = gritValue$scores
-colnames(temp)            = c("Grit")
-gritFactors               = cbind(grit[, 1], grit[, 31:42], gritScores2, temp)
-colnames(gritFactors)[1]  = "Country"
-# gritFactors$realGrit      = rowSums(gritQuestions)/12
-# gritFactors$realGrit      = gritFactors$realGrit - mean(gritFactors$realGrit)
-# gritFactors$rescaled      = gritFactors$Grit * (sd(gritFactors$realGrit)/sd(gritFactors$Grit))
-gritFactors$realGrit      = rowSums(gritQuestions)
-#gritFactors$realGrit      = scale(gritFactors$realGrit)
-gritFactors$rescaled      = gritFactors$Grit * (sd(gritFactors$realGrit)/sd(gritFactors$Grit))
 
 density1 = density(fScores1[, 1])
 density2 = density(gritScores[, 1])
@@ -135,6 +139,7 @@ target = c("realGrit")
 
 addingRegressors = function(regressors, target, dataSet){
   RSS            = double()
+  tempString     = c()
   for(x in regressors){
     tempString    = c(tempString,x)
     gritPredictor = lm(as.formula(paste(target, paste(tempString, collapse=" + "), sep=" ~ ")), data = dataSet)
@@ -145,11 +150,19 @@ addingRegressors = function(regressors, target, dataSet){
   return(RSS)
 }
 
-
+attach(mtcars)
+par(mfrow=c(2,1))
 temp = addingRegressors(regressors,target, gritFactors)
 plot(temp, xaxt = "n", type = "l", ylab = "Residual Sum of Squares", xlab = "Regressor", main = "RSS changes when adding new Regressors")
 axis(1, at = 1:8, labels = regressors, las = 2)
 
+temp = addingRegressors(rev(regressors),target, gritFactors)
+plot(temp, xaxt = "n", type = "l", ylab = "Residual Sum of Squares", xlab = "Regressor", main = "RSS changes when adding new Regressors")
+axis(1, at = 1:8, labels = rev(regressors), las = 2)
+par(mfrow=c(1,1))
 
 
-
+common = merge(x = fiveFactors, y = gritFactors, by = c(c("country", "gender", "engnat", "age", "hand","race", "ageCat"),names),all = FALSE) 
+common2 = merge(x = fiveFactors, y = gritFactors, by =names, all = F)
+fiveFactors <- getDataSetWithBig5(data,FALSE,F)
+tempDF = rbind(fiveFactors,gritFactors[,colnames(fiveFactors)])
