@@ -52,6 +52,21 @@ clean = function(sourceFile) {
     x[x$age > 100, ]$age = 0
     x$ageCat = findInterval(x$age, c(10, 20, 30, 40, 50, 60, 70, 80, 90))
     },error = function(e) e)
+  if(!is.null(x$married)){
+    x$married = as.factor(x$married)
+  }
+  if(!is.null(x$voted)){
+    x$voted = as.factor(x$voted)
+  }
+  if(!is.null(x$religion)){
+    x$religion = as.factor(x$religion)
+  }
+  if(!is.null(x$race)){
+    x$race = as.factor(x$race)
+  }
+  if(!is.null(x$orientation)){
+    x$orientation = as.factor(x$orientation)
+  }
   return(x)
 }
 
@@ -111,4 +126,34 @@ getDataSetWithBig5 = function(data, grit, scale) {
         }
     }
     return(tempSet)
+}
+
+getGritDF = function(){
+  grit          = clean("data.csv")
+  factorsGrit   = fa(grit[, 43:92], nfactors = 5, rotate = "varimax", fm = "ml")
+  gritValue     = fa(grit[, 3:14], nfactors = 1, rotate = "varimax", fm = "ml")
+  gritQuestions = grit[, 3:14]
+  temp          = rep(6, nrow(gritQuestions))
+  for (i in c(1, 4, 6, 9, 10, 12)) {
+    gritQuestions[, i] = temp - gritQuestions[, i]
+  }
+  temp                      = rowSums(gritQuestions)/12
+  temp2                     = getDataSetWithBig5(grit,T,F)
+  gritScores                = factorsGrit$scores
+  colnames(gritScores)      = c("Intro/Extra", "Neuro", "Agree", "Conscient", "Openess")
+  gritScores                = data.frame(gritScores)
+  gritScores$Neuro          = -1 * (gritScores$Neuro)
+  gritScores2               = getDataSetWithBig5(grit, TRUE,F)
+  temp                      = gritValue$scores
+  colnames(temp)            = c("Grit")
+  gritFactors               = cbind(grit[, c("country", "education", "urban", "gender", "engnat", "age", "hand", "religion", "orientation","race","voted","married", "familysize", "ageCat", "source")], gritScores2, temp)
+  gritFactors$realGrit      = rowSums(gritQuestions)
+  return(gritFactors)
+}
+
+getCombinedData = function(data,scaled){
+  fiveFactors = getDataSetWithBig5(data,FALSE,scaled)
+  gritFactors = getGritDF()
+  tempDF = rbind(fiveFactors,gritFactors[,colnames(fiveFactors)])
+  return(tempDF)
 }
