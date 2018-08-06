@@ -8,16 +8,9 @@ gritFactors = getGritDF()
 
 malesGrit   = gritFactors[gritFactors$gender == 1, ]
 femalesGrit = gritFactors[gritFactors$gender == 2, ]
-fiveFactors = getFactors(data)
-males       = fiveFactors[fiveFactors$gender == 1, ]
-females     = fiveFactors[fiveFactors$gender == 2, ]
-t.test(males[, 9], malesGrit[, 14])
-t.test(females[, 9], femalesGrit[, 14])
 t.test(malesGrit$realGrit,femalesGrit$realGrit)
 
 
-name = colnames(gritFactors)
-name = name[-c(19,21,22,23)]
 gritPredictor             = lm(realGrit ~ Intro + Neuro + Agree + Openess + Conscient +age 
                                +gender + education + voted + married + urban, data = gritFactors)
 summary(gritPredictor)
@@ -38,11 +31,6 @@ yfit <- yfit*diff(h$mids[1:2])*length(res)
 lines(xfit, yfit, col="blue", lwd=2) 
 
 qqnorm(res)
-
-quantile(gritFactors$realGrit,0.05)
-quantile(gritFactors$realGrit,0.95)
-quantile(gritFactors$predictedGRit, 0.05)
-quantile(gritFactors$predictedGRit, 0.95)
 
 density1 = density(gritFactors$realGrit)
 density2 = density(gritFactors$predictedGRit)
@@ -81,3 +69,24 @@ axis(1, at = 1:length(regressors), labels = rev(regressors), las = 2)
 par(mfrow=c(1,1))
 
 
+
+#Comparing top 5% and bottom 5% of people w.r.t. grit
+quantile(gritFactors$realGrit,0.05)
+quantile(gritFactors$realGrit,0.95)
+
+
+top5Grit    = gritFactors[gritFactors$realGrit>=quantile(gritFactors$realGrit,0.95),]
+bottom5Grit = gritFactors[gritFactors$realGrit<=quantile(gritFactors$realGrit,0.05),]
+summary(top5Grit)
+summary(bottom5Grit)
+t.test(top5Grit$education,bottom5Grit$education)
+top5Grit$education    = as.factor(top5Grit$education)
+bottom5Grit$education = as.factor(bottom5Grit$education)
+levels(top5Grit$education) =  c("N/A", "Less than High School", "High School", "University", "Graduate")
+levels(bottom5Grit$education) =  c("N/A", "Less than High School", "High School", "University", "Graduate")
+
+barplot(rbind(prop.table(table(bottom5Grit$education)),prop.table(table(top5Grit$education))),
+        beside = TRUE, col= c("red","blue"),ylim = c(0,0.6), 
+        main = "Comparison of the top 5% vs. bottom 5% w.r.t. education levels",
+        xlab = "Level of education", ylab = "Density")
+legend(x = "topright", y = NULL, legend = c("Bottom 5%", "Top 5%"), col = c("red", "blue"), pch = 15)
