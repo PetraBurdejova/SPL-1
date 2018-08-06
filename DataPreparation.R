@@ -16,7 +16,7 @@ library(formatR)
 
 # import data
 
-reorderColumns = function(dataSet,questionnaireNames){
+reorderColumns = function(dataSet,gritSort,questionnaireNames = NULL,gritNames = NULL){
   if(missing(questionnaireNames)){
     letters            = c("E","N","A","C","O")
     questionnaireNames = c()
@@ -27,11 +27,23 @@ reorderColumns = function(dataSet,questionnaireNames){
     }
   }
   notQuestionnaire = setdiff(colnames(dataSet),questionnaireNames)
-  return(dataSet[,c(notQuestionnaire,questionnaireNames)])
+  resultDF         = dataSet[,c(notQuestionnaire,questionnaireNames)]
+  if(gritSort){
+    if(missing(gritNames)){
+      letter    = "GS"
+      gritNames = c()
+      for(x in 1:12){
+        gritNames = c(gritNames, paste(c(letter,x),collapse = ""))
+      }
+    }
+    notGrit  = setdiff(colnames(resultDF),gritNames)
+    resultDF = resultDF[,c(notGrit,gritNames)]
+  }
+  return(resultDF)
 }
 
 
-clean = function(sourceFile) {
+clean = function(sourceFile,gritSort) {
   tryCatch({
     x         = read_excel(sourceFile)
     x$country = as.factor(x$country)
@@ -46,10 +58,9 @@ clean = function(sourceFile) {
         # Replace unrealistic age valus
     x[x$age > 100, ]$age = 0
     x$ageCat             = findInterval(x$age, c(10, 20, 30, 40, 50, 60, 70, 80, 90))
-    x                    = reorderColumns(x)
+    x                    = reorderColumns(x,gritSort)
     return(x)
     }, error = function(e) e)
-  
   
   tryCatch({
     x         = read.delim(sourceFile)
@@ -81,11 +92,11 @@ clean = function(sourceFile) {
   if(!is.null(x$orientation)){
     x$orientation = as.factor(x$orientation)
   }
-  x = reorderColumns(x)
+  x = reorderColumns(x,gritSort)
   return(x)
 }
 
-data = clean("Big5.xlsx")
+data = clean("Big5.xlsx",F)
 
 
 # Functions to get the 'real' values according to the evaluation key.
@@ -144,7 +155,7 @@ getDataSetWithBig5 = function(data, grit, scale) {
 }
 
 getGritDF = function(){
-  grit          = clean("data.csv")
+  grit          = clean("data.csv",T)
   factorsGrit   = fa(grit[, which(colnames(grit) == "E1"):(which(colnames(grit) == "E1")+49)], nfactors = 5, rotate = "varimax", fm = "ml")
   gritValue     = fa(grit[, which(colnames(grit) == "GS1"):(which(colnames(grit) == "GS1")+11)], nfactors = 1, rotate = "varimax", fm = "ml")
   gritQuestions = grit[, which(colnames(grit) == "GS1"):(which(colnames(grit) == "GS1")+11)]
@@ -152,7 +163,6 @@ getGritDF = function(){
   for (i in c(1, 4, 6, 9, 10, 12)) {
     gritQuestions[, i] = temp - gritQuestions[, i]
   }
-  temp                      = rowSums(gritQuestions)/12
   temp2                     = getDataSetWithBig5(grit,T,F)
   gritScores                = factorsGrit$scores
   colnames(gritScores)      = c("Intro/Extra", "Neuro", "Agree", "Conscient", "Openess")
