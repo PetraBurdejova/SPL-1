@@ -2,10 +2,10 @@ source("DataPreparation.R")
 if (!require("compare")) install.packages("compare")
 library("compare")
 
-realValues = getDataSetWithBig5(data, FALSE,T)
-names      = c("Intro", "Neuro", "Agree", "Conscient", "Openess")
-start      = which(colnames(data) == "E1")
-finish     = start + 49
+realValues       = getDataSetWithBig5(data, FALSE,T)
+traitNames       = c("Intro", "Neuro", "Agree", "Conscient", "Openess")
+start            = which(colnames(data) == "E1")
+finish           = start + 49
 notQuestionnaire = setdiff(colnames(data),colnames(data)[start:finish])
 # Analyse how many factors to extract. Of course we want 5 since those are the personality traits measured. This
 # seems to be supported with this quite simple test.
@@ -22,7 +22,7 @@ nS = nScree(x = ev$values, aparallel = ap$eigen$qevpea)
 plotnScree(nS)
 par(col = "black")
 
-# Principal Componant Analysis This is the method which performs the PCA. I chose 5 factors since this corresonds to
+# Principal Componant Analysis: This is the method which performs the PCA. I chose 5 pcas since this corresonds to
 # the Big 5.
 psychPCA = function(data) {
     pca                   = principal(data[, start:finish], nfactors = 5, rotate = "none")
@@ -43,13 +43,13 @@ prcompPCA = function(data) {
 }
 
 princompPCA = function(data) {
-    pca3 = princomp(data[, start:finish])
-    fviz_eig(pca3)
-    pcaDF2 = data.frame(pca3$scores[, 0:5])
-    colnames(pcaDF2) = c("Intro", "Neuro", "Agree", "Conscient", "Openess")
-    pcaDF2 = cbind(data[, notQuestionnaire], pcaDF2)
-    pcaDF2$Neuro = -1 * pcaDF2$Neuro
-    return(pcaDF2)
+    pca = princomp(data[, start:finish])
+    fviz_eig(pca)
+    pcaDF = data.frame(pca$scores[, 0:5])
+    colnames(pcaDF) = c("Intro", "Neuro", "Agree", "Conscient", "Openess")
+    pcaDF = cbind(data[, notQuestionnaire], pcaDF)
+    pcaDF$Neuro = -1 * pcaDF$Neuro
+    return(pcaDF)
 }
 
 getFactors = function(data) {
@@ -61,14 +61,15 @@ getFactors = function(data) {
 }
 
 # This space is for testing of data preparation
-pca = princomp(data[, start:finish])
+pca  = princomp(data[, start:finish])
+pca2 = prcomp(data[,start:finish])
 
 
 # Comparing two different functions for factor extraction. The first one 'fa' is from the 'psych' package and by
 # default uses the minres solution and oblimin rotation The factanal function uses maximum likelihood and varimax
 # rotation. factors = fa(data[,8:57],nfactors = 5)
-factors1 = fa(data[, start:finish], nfactors = 5, rotate = "varimax", fm = "ml")
-factors1b = fa(data[, start:start+9], nfactors = 1, rotate = "varimax", fm = "ml")
+factors = fa(data[, start:finish], nfactors = 5, rotate = "varimax", fm = "ml")
+
 # factors1b = fa(data[,8:57],nfactors = 5,rotate = 'varimax') factors1c = fa(data[,8:57],nfactors = 5,fm='ml')
 # factors2 = factanal(data[,8:57], 5) fScores = data.frame(factors$scores) fScores1 = data.frame(factors1$scores)
 # fScores1b = data.frame(factors1b$scores) fScores1c = data.frame(factors1c$scores) coef =
@@ -76,9 +77,10 @@ factors1b = fa(data[, start:start+9], nfactors = 1, rotate = "varimax", fm = "ml
 
 
 
-factorsEvaluation  = fa.stats(data[, start:finish], factors1$loadings)
+factorsEvaluation  = fa.stats(data[, start:finish], factors$loadings)
 pcaEvaluation      = fa.stats(data[, start:finish], pca$loadings)
-
+mean(pca$center-pca2$center)
+mean(pca$sdev-pca2$sdev)
 
 
 compareDesities = function(d) {
@@ -86,7 +88,7 @@ compareDesities = function(d) {
     oldValues   = getFactors(d)
     pcaValues   = princompPCA(d)
     par(lwd = 2)
-    for( x in  names){
+    for( x in  traitNames){
       real          = density(realValues[,c(x)])
       estimatedFA   = density(oldValues[,c(x)])
       estimatedPCA  = density(pcaValues[,c(x)])
@@ -105,18 +107,18 @@ compareDifferences = function(d){
   oldValues   = getFactors(d)
   pcaValues   = psychPCA(d)
   
-  avgDiffFA   = abs(realValues[, names] - oldValues[,names])
+  avgDiffFA   = abs(realValues[, traitNames] - oldValues[,traitNames])
   n           = nrow(avgDiffFA) * 5
   avgDiffFA   = rowSums(avgDiffFA)
   avgDiffFA   = sum(avgDiffFA)/n
   
-  avgDiffPCA  = abs(realValues[, names] - pcaValues[, names])
+  avgDiffPCA  = abs(realValues[, traitNames] - pcaValues[, traitNames])
   avgDiffPCA  = rowSums(avgDiffPCA)
   avgDiffPCA  = sum(avgDiffPCA)/n
   
-  summary(realValues[, names])
-  summary(oldValues[, names])
-  summary(pcaValues[, names])
+  summary(realValues[, traitNames])
+  summary(oldValues[, traitNames])
+  summary(pcaValues[, traitNames])
   print(avgDiffFA)
   print(avgDiffPCA)
 }
@@ -124,7 +126,13 @@ compareDifferences = function(d){
 compareDesities(data)
 compareDifferences(data)
 
+
+
+#Check how much overlap there is between the original data set and the grit data set. 
+#Since there is very little we can assume that they are distinct data set. Therefore we can combine them
+#during the analysis, in order to have a larger data set.
+
 fiveFactors = getDataSetWithBig5(data,FALSE,F)
 gritFactors = getGritDF()
-nrow(merge(x = fiveFactors, y = gritFactors, by = c(c("country", "gender", "engnat", "age", "hand","race", "ageCat"),names),all = FALSE)) 
-nrow(merge(x = fiveFactors, y = gritFactors, by =names, all = F))
+nrow(merge(x = fiveFactors, y = gritFactors, by = c(c("country", "gender", "engnat", "age", "hand","race", "ageCat"),traitNames),all = FALSE)) 
+nrow(merge(x = fiveFactors, y = gritFactors, by =traitNames, all = F))

@@ -15,9 +15,25 @@ if (!require("formatR")) install.packages("formatR")
 library(formatR)
 
 # import data
+
+reorderColumns = function(dataSet,questionnaireNames){
+  if(missing(questionnaireNames)){
+    letters            = c("E","N","A","C","O")
+    questionnaireNames = c()
+    for(l in letters){
+      for(x in 1:10){
+        questionnaireNames = c(questionnaireNames, paste(c(l,x),collapse = ""))
+      }
+    }
+  }
+  notQuestionnaire = setdiff(colnames(dataSet),questionnaireNames)
+  return(dataSet[,c(notQuestionnaire,questionnaireNames)])
+}
+
+
 clean = function(sourceFile) {
   tryCatch({
-    x = read_excel(sourceFile)
+    x         = read_excel(sourceFile)
     x$country = as.factor(x$country)
     x$race    = as.factor(x$race)
     x$gender  = as.factor(x$gender)
@@ -27,15 +43,16 @@ clean = function(sourceFile) {
     }    else{
       x$source  = as.factor(x$source)
     }
-    
-    
-    # Replace unrealistic age valus
+        # Replace unrealistic age valus
     x[x$age > 100, ]$age = 0
-    x$ageCat = findInterval(x$age, c(10, 20, 30, 40, 50, 60, 70, 80, 90))
+    x$ageCat             = findInterval(x$age, c(10, 20, 30, 40, 50, 60, 70, 80, 90))
+    x                    = reorderColumns(x)
     return(x)
     }, error = function(e) e)
+  
+  
   tryCatch({
-    x = read.delim(sourceFile)
+    x         = read.delim(sourceFile)
     x$country = as.factor(x$country)
     x$race    = as.factor(x$race)
     x$gender  = as.factor(x$gender)
@@ -45,12 +62,9 @@ clean = function(sourceFile) {
     }    else{
       x$source  = as.factor(x$source)
     }
-    
-    
-    
     # Replace unrealistic age valus
     x[x$age > 100, ]$age = 0
-    x$ageCat = findInterval(x$age, c(10, 20, 30, 40, 50, 60, 70, 80, 90))
+    x$ageCat             = findInterval(x$age, c(10, 20, 30, 40, 50, 60, 70, 80, 90))
     },error = function(e) e)
   if(!is.null(x$married)){
     x$married = as.factor(x$married)
@@ -67,6 +81,7 @@ clean = function(sourceFile) {
   if(!is.null(x$orientation)){
     x$orientation = as.factor(x$orientation)
   }
+  x = reorderColumns(x)
   return(x)
 }
 
@@ -130,9 +145,9 @@ getDataSetWithBig5 = function(data, grit, scale) {
 
 getGritDF = function(){
   grit          = clean("data.csv")
-  factorsGrit   = fa(grit[, 43:92], nfactors = 5, rotate = "varimax", fm = "ml")
-  gritValue     = fa(grit[, 3:14], nfactors = 1, rotate = "varimax", fm = "ml")
-  gritQuestions = grit[, 3:14]
+  factorsGrit   = fa(grit[, which(colnames(grit) == "E1"):(which(colnames(grit) == "E1")+49)], nfactors = 5, rotate = "varimax", fm = "ml")
+  gritValue     = fa(grit[, which(colnames(grit) == "GS1"):(which(colnames(grit) == "GS1")+11)], nfactors = 1, rotate = "varimax", fm = "ml")
+  gritQuestions = grit[, which(colnames(grit) == "GS1"):(which(colnames(grit) == "GS1")+11)]
   temp          = rep(6, nrow(gritQuestions))
   for (i in c(1, 4, 6, 9, 10, 12)) {
     gritQuestions[, i] = temp - gritQuestions[, i]
@@ -154,6 +169,6 @@ getGritDF = function(){
 getCombinedData = function(data,scaled){
   fiveFactors = getDataSetWithBig5(data,FALSE,scaled)
   gritFactors = getGritDF()
-  tempDF = rbind(fiveFactors,gritFactors[,colnames(fiveFactors)])
+  tempDF      = rbind(fiveFactors,gritFactors[,colnames(fiveFactors)])
   return(tempDF)
 }
