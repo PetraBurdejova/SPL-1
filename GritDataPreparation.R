@@ -1,8 +1,6 @@
 # import required libraries
 source("DataPreparation.R")
-source("DataPreparationAnalysis.R")
-if (!require("glmnet")) install.packages("glmnet")
-library("glmnet")
+
 
 gritFactors = getGritDF()
 
@@ -11,16 +9,17 @@ femalesGrit = gritFactors[gritFactors$gender == 2, ]
 t.test(malesGrit$realGrit,femalesGrit$realGrit)
 
 
-gritPredictor             = lm(realGrit ~ Intro + Neuro + Agree + Openess + Conscient +age 
-                               +gender + education + voted + married + urban, data = gritFactors)
+
+#Building an estimator for grit and evaluating the results.
+
+regressors = c("Intro", "Neuro", "Agree", "Openess", "Conscient", "age", "gender", "education", "voted", "familysize", "married", "urban")
+target = c("realGrit")
+gritPredictor             = lm(as.formula(paste(target, paste(regressors, collapse=" + "), sep=" ~ "))
+                               , data = gritFactors)
 summary(gritPredictor)
 gritFactors$predictedGRit = predict(gritPredictor, newdata = gritFactors)
 
-predictedGritDensity      = density(gritFactors$predictedGRit)
-realGritDensity           = density(gritFactors$realGrit)
-plot(realGritDensity, main = "The Density Distribution of Grit", col = "red", xlab = "Grit", ylim = c(0, 0.08))
-lines(predictedGritDensity, col="blue")
-  
+
 res = gritPredictor$residuals
 plot(sort(res),type = "l")
 density1 = density(res)
@@ -39,8 +38,8 @@ lines(density2, col = "blue")
 legend(x = "topright", y = NULL, legend = c("Real", "Predicted"), col = c("red", "blue"), pch = 15)
 
 
-regressors = c("Intro", "Neuro", "Agree", "Openess", "Conscient", "age", "gender", "education", "voted", "married", "urban")
-target = c("realGrit")
+
+#Looking at the effect of adding the different regressors one by one.
 
 addingRegressors = function(regressors, target, dataSet){
   RSS            = double()
@@ -60,7 +59,7 @@ par(mfrow=c(2,1))
 temp = addingRegressors(regressors,target, gritFactors)
 temp
 plot(temp, xaxt = "n", type = "l", ylab = "Residual Sum of Squares", xlab = "Regressor", main = "RSS changes when adding new Regressors")
-axis(1, at = 1:11, labels = regressors, las = 2)
+axis(1, at = 1:length(regressors), labels = regressors, las = 2)
 
 temp = addingRegressors(rev(regressors),target, gritFactors)
 temp
@@ -77,12 +76,14 @@ quantile(gritFactors$realGrit,0.95)
 
 top5Grit    = gritFactors[gritFactors$realGrit>=quantile(gritFactors$realGrit,0.95),]
 bottom5Grit = gritFactors[gritFactors$realGrit<=quantile(gritFactors$realGrit,0.05),]
+middle      = gritFactors[gritFactors$realGrit<quantile(gritFactors$realGrit,0.95) & 
+                          gritFactors$realGrit>quantile(gritFactors$realGrit,0.05),]
 summary(top5Grit)
 summary(bottom5Grit)
 t.test(top5Grit$education,bottom5Grit$education)
-top5Grit$education    = as.factor(top5Grit$education)
-bottom5Grit$education = as.factor(bottom5Grit$education)
-levels(top5Grit$education) =  c("N/A", "Less than High School", "High School", "University", "Graduate")
+top5Grit$education            = as.factor(top5Grit$education)
+bottom5Grit$education         = as.factor(bottom5Grit$education)
+levels(top5Grit$education)    =  c("N/A", "Less than High School", "High School", "University", "Graduate")
 levels(bottom5Grit$education) =  c("N/A", "Less than High School", "High School", "University", "Graduate")
 
 barplot(rbind(prop.table(table(bottom5Grit$education)),prop.table(table(top5Grit$education))),
@@ -90,3 +91,17 @@ barplot(rbind(prop.table(table(bottom5Grit$education)),prop.table(table(top5Grit
         main = "Comparison of the top 5% vs. bottom 5% w.r.t. education levels",
         xlab = "Level of education", ylab = "Density")
 legend(x = "topright", y = NULL, legend = c("Bottom 5%", "Top 5%"), col = c("red", "blue"), pch = 15)
+
+
+
+
+levels(top5Grit$voted)    =  c( "N/A", "Yes", "No")
+levels(bottom5Grit$voted) =  c("N/A","Yes", "No")
+levels(middle$voted)      =  c("N/A","Yes", "No")
+barplot(rbind(prop.table(table(bottom5Grit$voted)),prop.table(table(middle$voted)),prop.table(table(top5Grit$voted))),
+        beside = TRUE, col= c("red","blue","green"),ylim = c(0,0.8), 
+        main = "Comparison of the top 5% vs. bottom 5% w.r.t. education levels",
+        xlab = "Voted", ylab = "Density")
+legend(x = "topleft", y = NULL, legend = c("Bottom 5%", "Middle 90%", "Top 5%"), col = c("red","green", "blue"), pch = 15)
+
+plot(gritFactors[gritFactors$age > 0,]$age,gritFactors[gritFactors$age > 0,]$realGrit,xlab = "Age",ylab = "Grit")

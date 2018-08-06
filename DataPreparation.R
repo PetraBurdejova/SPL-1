@@ -76,6 +76,9 @@ clean = function(sourceFile,gritSort) {
     # Replace unrealistic age valus
     x[x$age > 100, ]$age = 0
     x$ageCat             = findInterval(x$age, c(10, 20, 30, 40, 50, 60, 70, 80, 90))
+    if(!is.null(x$familysize)){
+      x[x$familysize > 10,]$familysize = median(x$familysize)
+    }
     },error = function(e) e)
   if(!is.null(x$married)){
     x$married = as.factor(x$married)
