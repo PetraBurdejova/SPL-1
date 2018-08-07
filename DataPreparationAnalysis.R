@@ -1,12 +1,12 @@
 source("DataPreparation.R")
-if (!require("compare")) install.packages("compare")
-library("compare")
 
 realValues       = getDataSetWithBig5(data, FALSE,T)
 traitNames       = c("Intro", "Neuro", "Agree", "Conscient", "Openess")
 start            = which(colnames(data) == "E1")
 finish           = start + 49
 notQuestionnaire = setdiff(colnames(data),colnames(data)[start:finish])
+
+
 # Analyse how many factors to extract. Of course we want 5 since those are the personality traits measured. This
 # seems to be supported with this quite simple test.
 vss(data[, start:finish], fm = "ml")
@@ -79,6 +79,8 @@ factors = fa(data[, start:finish], nfactors = 5, rotate = "varimax", fm = "ml")
 
 factorsEvaluation  = fa.stats(data[, start:finish], factors$loadings)
 pcaEvaluation      = fa.stats(data[, start:finish], pca$loadings)
+
+#Compare two pca methods
 mean(pca$center-pca2$center)
 mean(pca$sdev-pca2$sdev)
 

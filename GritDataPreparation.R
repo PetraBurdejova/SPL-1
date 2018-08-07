@@ -23,10 +23,10 @@ gritFactors$predictedGRit = predict(gritPredictor, newdata = gritFactors)
 res = gritPredictor$residuals
 plot(sort(res),type = "l")
 density1 = density(res)
-h = hist(res,breaks = 40, col = "red")
-xfit<-seq(min(res),max(res),length=40)
-yfit<-dnorm(xfit,mean=mean(res),sd=sd(res))
-yfit <- yfit*diff(h$mids[1:2])*length(res)
+h        = hist(res,breaks = 40, col = "red")
+xfit     = seq(min(res),max(res),length=40)
+yfit     = dnorm(xfit,mean=mean(res),sd=sd(res))
+yfit     = yfit*diff(h$mids[1:2])*length(res)
 lines(xfit, yfit, col="blue", lwd=2) 
 
 qqnorm(res)
@@ -81,6 +81,8 @@ middle      = gritFactors[gritFactors$realGrit<quantile(gritFactors$realGrit,0.9
 summary(top5Grit)
 summary(bottom5Grit)
 t.test(top5Grit$education,bottom5Grit$education)
+
+#Top 5% vs. Bottom 5%: Education
 top5Grit$education            = as.factor(top5Grit$education)
 bottom5Grit$education         = as.factor(bottom5Grit$education)
 levels(top5Grit$education)    =  c("N/A", "Less than High School", "High School", "University", "Graduate")
@@ -94,6 +96,7 @@ legend(x = "topright", y = NULL, legend = c("Bottom 5%", "Top 5%"), col = c("red
 
 
 
+#Top 5% vs. Bottom 5%: Voted
 
 levels(top5Grit$voted)    =  c( "N/A", "Yes", "No")
 levels(bottom5Grit$voted) =  c("N/A","Yes", "No")
@@ -104,15 +107,12 @@ barplot(rbind(prop.table(table(bottom5Grit$voted)),prop.table(table(middle$voted
         xlab = "Voted", ylab = "Density")
 legend(x = "topleft", y = NULL, legend = c("Bottom 5%", "Middle 90%", "Top 5%"), col = c("red","green", "blue"), pch = 15)
 
-plot(gritFactors[gritFactors$age > 0,]$age,gritFactors[gritFactors$age > 0,]$realGrit,xlab = "Age",ylab = "Grit")
-
-mean(top5Grit$age)
-mean(bottom5Grit$age)
-mean(gritFactors$age)
 
 
 
 #Grit over age
+
+plot(gritFactors[gritFactors$age > 0,]$age,gritFactors[gritFactors$age > 0,]$realGrit,xlab = "Age",ylab = "Grit")
 par(mfrow=c(2,1))
 ageGrit = c()
 for(x in min(gritFactors[gritFactors$age > 0,]$age):60){

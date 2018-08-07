@@ -55,8 +55,22 @@ clean = function(sourceFile,gritSort) {
     }    else{
       x$source  = as.factor(x$source)
     }
-        # Replace unrealistic age valus
-    x[x$age > 100, ]$age = 0
+    # Replace unrealistic age valus
+    agePredictor = lm(age~., data = x[x$age <= 100,])
+    tempAge      = predict(agePredictor, newdata = x[x$age > 100,])
+    tempAge      = as.integer(tempAge)
+    if(anyNA(tempAge)){
+      x[x$age > 100, ]$age = as.integer(mean(x[x$age <= 100,]$age))
+    } else{
+      for(y in 1:length(tempAge)){
+        if(tempAge[y] < 10){
+          tempAge[y] = 10
+        }
+      }
+      x[x$age > 100,]$age = tempAge
+    }
+    # x[x$age > 100, ]$age = 0
+    # x[x$age > 100, ]$age = median(x[x$age <= 100,]$age)
     x$ageCat             = findInterval(x$age, c(10, 20, 30, 40, 50, 60, 70, 80, 90))
     x                    = reorderColumns(x,gritSort)
     return(x)
@@ -74,7 +88,21 @@ clean = function(sourceFile,gritSort) {
       x$source  = as.factor(x$source)
     }
     # Replace unrealistic age valus
-    x[x$age > 100, ]$age = 0
+    agePredictor = lm(age~., data = x[x$age <= 100,])
+    tempAge      = predict(agePredictor, newdata = x[x$age > 100,])
+    tempAge      = as.integer(tempAge)
+    if(anyNA(tempAge)){
+      x[x$age > 100, ]$age = as.integer(mean(x[x$age <= 100,]$age))
+    } else{
+      for(y in 1:length(tempAge)){
+        if(tempAge[y] < 10){
+          tempAge[y] = 10
+        }
+      }
+      x[x$age > 100,]$age = tempAge
+    }
+    # x[x$age > 100, ]$age = 0
+    # x[x$age > 100, ]$age = median(x[x$age <= 100,]$age)
     x$ageCat             = findInterval(x$age, c(10, 20, 30, 40, 50, 60, 70, 80, 90))
     if(!is.null(x$familysize)){
       x[x$familysize > 10,]$familysize = median(x$familysize)
