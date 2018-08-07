@@ -1,12 +1,21 @@
 source("DataPreparation.R")
-fiveFactors <- getFactors(data)
+fiveFactors <- getCombinedData(data,F)
+
 
 males = fiveFactors[fiveFactors$gender==1,]
 females =fiveFactors[fiveFactors$gender==2,]
+
+#Count occurances of country levels in males
+temp <- count(males, "country")
+
 mean(males[,9])-mean(females[,9])
 #Added t-test to compare the means of males and females to see wether it is significant or not.
 #The difference in group size is quite large. One might consider to not use the data of all femals.
 t.test(males[,9],females[,9])
+t.test(males[,10],females[,10])
+t.test(males[,11],females[,11])
+t.test(males[,12],females[,12])
+t.test(males[,13],females[,13])
 
 #An example of how to compare two density distributions. In this case the distribution of Introversion/Extraversion
 #in males and females.
@@ -17,104 +26,58 @@ lines(f,col="blue")
 legend(x = "topright", y = NULL, legend=c("Male", "Female"),
        col=c("red", "blue"),pch = 15)
 
-males =fiveFactors[fiveFactors$gender==1,]
-females =fiveFactors[fiveFactors$gender==2,]
-mean(males[,10])-mean(females[,10])
-#Added t-test to compare the means of males and females to see wether it is significant or not.
-#The difference in group size is quite large. One might consider to not use the data of all femals.
-t.test(males[,10],females[,10])
 
-#An example of how to compare two density distributions. In this case the distribution of Neuro
-#in males and females.
-m <- density(males[,10])
-f <- density(females[,10])
-plot(m,main ="the density distribution of Neuro",col="red",xlab = "Neuro")
-lines(f,col="green")
+
+#Neuro calcs
+plot(density(females[,10]), main = "The Density Distribution of Neuroticism",col = "blue",xlab = "Neuro")
+lines(density(males[,10]),col="red")
 legend(x = "topright", y = NULL, legend=c("Male", "Female"),
-       col=c("red", "green"),pch = 15)
-males =fiveFactors[fiveFactors$gender==1,]
-females =fiveFactors[fiveFactors$gender==2,]
-mean(males[,11])-mean(females[,11])
-#Added t-test to compare the means of males and females to see wether it is significant or not.
-#The difference in group size is quite large. One might consider to not use the data of all femals.
-t.test(males[,11],females[,11])
+       col=c("red", "blue"),pch = 15)
 
-#An example of how to compare two density distributions. In this case the distribution of Agree
-#in males and females.
-m <- density(males[,11])
-f <- density(females[,11])
-plot(m,main ="the density distribution of Agree",col="red",xlab = "Agree")
-lines(f,col="green")
+
+#Agree calcs
+plot(density(males[,11]),main = "The Density Distribution of Agreeableness",col = "red",xlab = "Agree")
+lines(density(females[,11]),col="blue")
 legend(x = "topright", y = NULL, legend=c("Male", "Female"),
-       col=c("red", "green"),pch = 15)
+       col=c("red", "blue"),pch = 15)
 
-males =fiveFactors[fiveFactors$gender==1,]
-females =fiveFactors[fiveFactors$gender==2,]
-mean(males[,12])-mean(females[,12])
-#Added t-test to compare the means of males and females to see wether it is significant or not.
-#The difference in group size is quite large. One might consider to not use the data of all femals.
-t.test(males[,12],females[,12])
 
-#An example of how to compare two density distributions. In this case the distribution of Openess
-#in males and females.
-m <- density(males[,12])
-f <- density(females[,12])
-plot(m,main ="the density distribution of Openess",col="red",xlab = "Openess")
-lines(f,col="yellow")
+#Openeness calcs
+plot(density(males[,12]),main = "The Density Distribution of Openness",col = "red",xlab = "Openeness")
+lines(density(females[,12]),col="blue")
 legend(x = "topright", y = NULL, legend=c("Male", "Female"),
-       col=c("red", "yellow"),pch = 15)
-
-males =fiveFactors[fiveFactors$gender==1,]
-females =fiveFactors[fiveFactors$gender==2,]
-mean(males[,12])-mean(females[,13])
-#Added t-test to compare the means of males and females to see wether it is significant or not.
-#The difference in group size is quite large. One might consider to not use the data of all femals.
-t.test(males[,13],females[,13])
-
-#An example of how to compare two density distributions. In this case the distribution of Conscient
-#in males and females.
-m <- density(males[,13])
-f <- density(females[,13])
-plot(m,main ="the density distribution of Conscient",col="red",xlab = "Conscient")
-lines(f,col="gray")
-legend(x = "topright", y = NULL, legend=c("Male", "Female"),
-       col=c("red", "gray"),pch = 15
-
-       
-       
-       
-
-males =fiveFactors[fiveFactors$gender==1,]
-females =fiveFactors[fiveFactors$gender==2,]
-mean(males[,12])-mean(females[,12])
-
-#Added t-test to compare the means of males and females to see wether it is significant or not.
-#The difference in group size is quite large. One might consider to not use the data of all femals.
-t.test(males[males$ageCat=="US",2],males[males$ageCat=="GB",2])
+       col=c("red", "blue"),pch = 15)
 
 
-       
-
-males = fiveFactors[fiveFactors$gender==1,]
-females =fiveFactors[fiveFactors$gender==2,]
-mean(males[,12])-mean(females[,12])
-#Added t-test to compare the means of males and females to see wether it is significant or not.
-#The difference in group size is quite large. One might consider to not use the data of all femals.
-t.test(males[,12],females[,12])
-
-#An example of how to compare two density distributions. In this case the distribution of Conscient
-#in males and females.
-m <- density(males[,12])
-f <- density(females[,12])
-plot(m,main = "The density distribution of Conscient",col = "red",xlab = "Conscient")
-lines(f,col="blue")
+#Conscient calcs
+plot(density(males[,13]),main = "The Density Distribution of Conscient",col = "red",xlab = "Conscient")
+lines(density(females[,13]),col="blue")
 legend(x = "topright", y = NULL, legend=c("Male", "Female"),
        col=c("red", "blue"),pch = 15)
 
 
 
-       
-       
-       
+
+#Country tests for later purpose
+t.test(fiveFactors[fiveFactors$country=="US",9],fiveFactors[fiveFactors$country=="GB",9])
+t.test(fiveFactors[fiveFactors$country=="US",9],fiveFactors[fiveFactors$country=="IN",9])
+t.test(fiveFactors[fiveFactors$country=="US",9],fiveFactors[fiveFactors$country=="DE",9])
+t.test(fiveFactors[fiveFactors$country=="US",9],fiveFactors[fiveFactors$country=="AU",9])
 
 
+#Finding outliers in personality traits Intro/Extra, Neuro, Agree, Conscient and Openess
+
+OL <- boxplot(fiveFactors[9:13], main="Boxplot of all personality traits")
+
+#Summary of all Factors 
+
+sumup <- fiveFactors[9:13]
+
+
+
+
+ 
+
+  
+  
+  
