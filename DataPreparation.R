@@ -56,6 +56,7 @@ clean = function(sourceFile,gritSort) {
       x$source  = as.factor(x$source)
     }
     # Replace unrealistic age valus
+    x[x$age > 1911,]$age = abs((2012 - x[x$age > 1911,]$age)) 
     agePredictor = lm(age~., data = x[x$age <= 100,])
     tempAge      = predict(agePredictor, newdata = x[x$age > 100,])
     tempAge      = as.integer(tempAge)
@@ -88,6 +89,7 @@ clean = function(sourceFile,gritSort) {
       x$source  = as.factor(x$source)
     }
     # Replace unrealistic age valus
+    x[x$age > 1911,]$age = abs(2012 - x[x$age > 1911,]$age) 
     agePredictor = lm(age~., data = x[x$age <= 100,])
     tempAge      = predict(agePredictor, newdata = x[x$age > 100,])
     tempAge      = as.integer(tempAge)
