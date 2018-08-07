@@ -69,7 +69,7 @@ detach(DATA)
 
 
 #not important - lags as Granger no use for data set... will be deleted prior submit..
-#select.lags<-function(x,y,max.lag=8) {
+select.lags<-function(x,y,max.lag=8) {
 y<-as.numeric(y)
 y.lag<-embed(y,max.lag+1)[,-1,drop=FALSE]
 x.lag<-embed(x,max.lag+1)[,-1,drop=FALSE]
