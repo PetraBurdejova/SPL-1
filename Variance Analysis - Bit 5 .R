@@ -3,7 +3,7 @@ source("DataPreparation.R")
 DATA = getDataSetWithBig5(data, F, F)
 
 
-#Do the analysis of variance
+#Do the analysis of variance 
 
 aov1f = aov(Agree~age,data=DATA)         #an example of analysis of variance for Agree ~age
 summary(aov1f)#show the summary table
@@ -89,5 +89,5 @@ structure(list(ic=cbind(aic=aic,bic=bic),pvals=pvals,
 }
 #s<-select.lags(ages$Intro,ages$Neuro,8)
 #t(s$selection)
-###----
+####----
 
