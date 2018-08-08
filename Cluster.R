@@ -10,8 +10,8 @@ big5 = getCombinedData(data,T)[,c("age",traits)]
 #Clustering with 2 to 5 clusters
 for(x in 2:5){
   temp <- kmeans(big5,x,nstart = 25)
-  fviz_cluster(temp, data = big5, geom = "point",
-               stand = FALSE, ellipse.type = "norm")
+  plot(fviz_cluster(temp, data = big5, geom = "point",
+               stand = FALSE, ellipse.type = "norm"))
   clusters         = big5
   clusters$Cluster = temp$cluster
   print(x)

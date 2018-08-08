@@ -63,6 +63,12 @@ getFactors = function(data) {
 # This space is for testing of data preparation
 pca  = princomp(data[, start:finish])
 pca2 = prcomp(data[,start:finish])
+fviz_screeplot(pca, addlabels = T)
+fviz_screeplot(pca2, addlabels = T)
+
+for(x in 1:5){
+  plot(fviz_contrib(pca, choice = "var", axes = x, top = 10))
+}
 
 
 # Comparing two different functions for factor extraction. The first one 'fa' is from the 'psych' package and by
