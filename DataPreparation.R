@@ -72,6 +72,8 @@ clean = function(sourceFile,gritSort) {
     }
     # x[x$age > 100, ]$age = 0
     # x[x$age > 100, ]$age = median(x[x$age <= 100,]$age)
+    # tempAges             = sample(x[x$age <= 100,]$age, nrow(x[x$age > 100,]),replace = T)
+    # x[x$age > 100, ]$age = tempAges
     x$ageCat             = findInterval(x$age, c(10, 20, 30, 40, 50, 60, 70, 80, 90))
     x                    = reorderColumns(x,gritSort)
     return(x)
@@ -105,6 +107,8 @@ clean = function(sourceFile,gritSort) {
     }
     # x[x$age > 100, ]$age = 0
     # x[x$age > 100, ]$age = median(x[x$age <= 100,]$age)
+    # tempAges             = sample(x[x$age <= 100,]$age, nrow(x[x$age > 100,]),replace = T)
+    # x[x$age > 100, ]$age = tempAges
     x$ageCat             = findInterval(x$age, c(10, 20, 30, 40, 50, 60, 70, 80, 90))
     if(!is.null(x$familysize)){
       x[x$familysize > 10,]$familysize = median(x$familysize)
