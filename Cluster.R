@@ -22,39 +22,45 @@ for(x in 2:5){
 }
 
 
-# K-means vs. PAM
-kCluster <- kmeans(big5[,traits],4,nstart = 25)
-fviz_cluster(kCluster, data = big5[,traits], geom = "point",
-             stand = FALSE, ellipse.type = "norm")
-pamCluster = pam(big5[,traits], 2)
-pamCluster$cluster
-fviz_cluster(pamCluster, stand = FALSE, geom = "point",
-             frame.type = "norm")
-
-
-
 # Number of clusters 
 
 # Elbow method
-k.max = 10
-wss <- sapply(2:k.max, 
-              function(k){kmeans(big5[,traits], k, nstart = 15 ,iter.max = 150 )$tot.withinss})
+# k.max = 10
+# wss <- sapply(2:k.max, 
+#               function(k){kmeans(big5[,traits], k, nstart = 15 ,iter.max = 150 )$tot.withinss})
+# 
+# plot(2:k.max, wss,
+#      type="b", pch = 19, frame = FALSE, 
+#      xlab="Number of clusters K",
+#      ylab="Total within-clusters sum of squares")
 
-plot(2:k.max, wss,
-     type="b", pch = 19, frame = FALSE, 
-     xlab="Number of clusters K",
-     ylab="Total within-clusters sum of squares")
+fviz_nbclust(big5[sample(nrow(big5),2000),], kmeans, method = "wss")
+fviz_nbclust(big5[sample(nrow(big5),2000),], pam, method = "wss")
 
 # Average Silhoutte
+# sil <- rep(0, k.max)
+# for(i in 2:k.max){
+#   kCluster <- kmeans(big5, centers = i, nstart = 25)
+#   ss <- silhouette(kCluster$cluster, dist(big5))
+#   sil[i] <- mean(ss[, 3])
+# }
+# plot(1:k.max, sil, type = "b", pch = 19, 
+#      frame = FALSE, xlab = "Number of clusters k",xlim = c(0,k.max))
 
-sil <- rep(0, k.max)
-for(i in 2:k.max){
-  kCluster <- kmeans(big5, centers = i, nstart = 25)
-  ss <- silhouette(kCluster$cluster, dist(big5))
-  sil[i] <- mean(ss[, 3])
-}
+fviz_nbclust(big5, kmeans, method = "silhouette")
+fviz_nbclust(big5[sample(nrow(big5),2000),], pam, method = "silhouette")
 
-# Plot the  average silhouette width
-plot(1:k.max, sil, type = "b", pch = 19, 
-     frame = FALSE, xlab = "Number of clusters k")
+#GAP_Stat
+fviz_nbclust(big5[sample(nrow(big5),1000),], kmeans, method = "gap_stat")
+fviz_nbclust(big5[sample(nrow(big5),1000),], pam, method = "gap_stat")
 
+
+
+# K-means vs. PAM
+kCluster <- kmeans(big5,2,nstart = 25)
+fviz_cluster(kCluster, data = big5, geom = "point",
+             stand = FALSE, ellipse.type = "norm")
+
+pamCluster = pam(big5, 2)
+fviz_cluster(pamCluster, stand = FALSE, geom = "point",
+             elliplse.type = "norm")
