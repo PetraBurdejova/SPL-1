@@ -50,7 +50,7 @@ plot(2:k.max, wss,
 sil <- rep(0, k.max)
 for(i in 2:k.max){
   kCluster <- kmeans(big5, centers = i, nstart = 25)
-  ss <- silhouette(kCluster$cluster, dist(data))
+  ss <- silhouette(kCluster$cluster, dist(big5))
   sil[i] <- mean(ss[, 3])
 }
 
