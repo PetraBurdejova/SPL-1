@@ -1,0 +1,9 @@
+Name of Quantlet : SPL_Big5VarianceAnalysis
+
+Published in : Statistical programming languages - Student Project on "Big5"
+
+Description : 'Analysis of the Variance of the Big5. Making use of an ANOVA to test whether independent variables (gender, age, hand, and race) improve the fit of a regression and decreasing the variance.'
+
+Keywords : Variance, linearregression, Big5
+
+Author : Aron
