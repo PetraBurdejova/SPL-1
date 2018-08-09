@@ -1,0 +1,9 @@
+Name of Quantlet : SPL_Big5DataAnalysisAgeGender
+
+Published in : Statistical programming languages - Student Project on "Big5"
+
+Description : 'Visuel Analysis whether an average change in personality traits across the life course appears.'
+
+Keywords : Plot, AgeAnalysis , Big5
+
+Author : Aron
