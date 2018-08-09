@@ -17,120 +17,120 @@ library(formatR)
 # import data
 
 reorderColumns = function(dataSet,gritSort,questionnaireNames = NULL,gritNames = NULL){
-  if(missing(questionnaireNames)){
-    letters            = c("E","N","A","C","O")
-    questionnaireNames = c()
-    for(l in letters){
-      for(x in 1:10){
-        questionnaireNames = c(questionnaireNames, paste(c(l,x),collapse = ""))
-      }
+    if(missing(questionnaireNames)){
+        letters            = c("E","N","A","C","O")
+        questionnaireNames = c()
+        for(l in letters){
+          for(x in 1:10){
+            questionnaireNames = c(questionnaireNames, paste(c(l,x),collapse = ""))
+          }
+        }
     }
-  }
-  notQuestionnaire = setdiff(colnames(dataSet),questionnaireNames)
-  resultDF         = dataSet[,c(notQuestionnaire,questionnaireNames)]
-  if(gritSort){
-    if(missing(gritNames)){
-      letter    = "GS"
-      gritNames = c()
-      for(x in 1:12){
-        gritNames = c(gritNames, paste(c(letter,x),collapse = ""))
-      }
+    notQuestionnaire = setdiff(colnames(dataSet),questionnaireNames)
+    resultDF         = dataSet[,c(notQuestionnaire,questionnaireNames)]
+    if(gritSort){
+        if(missing(gritNames)){
+            letter    = "GS"
+            gritNames = c()
+            for(x in 1:12){
+                gritNames = c(gritNames, paste(c(letter,x),collapse = ""))
+            }
+        }
+        notGrit  = setdiff(colnames(resultDF),gritNames)
+        resultDF = resultDF[,c(notGrit,gritNames)]
     }
-    notGrit  = setdiff(colnames(resultDF),gritNames)
-    resultDF = resultDF[,c(notGrit,gritNames)]
-  }
-  return(resultDF)
+    return(resultDF)
 }
 
 
 clean = function(sourceFile,gritSort) {
-  tryCatch({
-    x         = read_excel(sourceFile)
-    x$country = as.factor(x$country)
-    x$race    = as.factor(x$race)
-    x$gender  = as.factor(x$gender)
-    x$hand    = as.factor(x$hand)
-    if(is.null(x$source)){
-      x$source  = 6
-    }    else{
-      x$source  = as.factor(x$source)
-    }
-    # Replace unrealistic age valus
-    x[x$age > 1911,]$age = abs((2012 - x[x$age > 1911,]$age)) 
-    agePredictor = lm(age~., data = x[x$age <= 100,])
-    tempAge      = predict(agePredictor, newdata = x[x$age > 100,])
-    tempAge      = as.integer(tempAge)
-    if(anyNA(tempAge)){
-      x[x$age > 100, ]$age = as.integer(mean(x[x$age <= 100,]$age))
-    } else{
-      for(y in 1:length(tempAge)){
-        if(tempAge[y] < 10){
-          tempAge[y] = 10
+    tryCatch({
+        x         = read_excel(sourceFile)
+        x$country = as.factor(x$country)
+        x$race    = as.factor(x$race)
+        x$gender  = as.factor(x$gender)
+        x$hand    = as.factor(x$hand)
+        if(is.null(x$source)){
+            x$source  = 6
+        }    else{
+            x$source  = as.factor(x$source)
         }
-      }
-      x[x$age > 100,]$age = tempAge
-    }
-    # x[x$age > 100, ]$age = 0
-    # x[x$age > 100, ]$age = median(x[x$age <= 100,]$age)
-    # tempAges             = sample(x[x$age <= 100,]$age, nrow(x[x$age > 100,]),replace = T)
-    # x[x$age > 100, ]$age = tempAges
-    x$ageCat             = findInterval(x$age, c(10, 20, 30, 40, 50, 60, 70, 80, 90))
-    x                    = reorderColumns(x,gritSort)
-    return(x)
+        # Replace unrealistic age valus
+        x[x$age > 1911,]$age = abs((2012 - x[x$age > 1911,]$age)) 
+        agePredictor = lm(age~., data = x[x$age <= 100,])
+        tempAge      = predict(agePredictor, newdata = x[x$age > 100,])
+        tempAge      = as.integer(tempAge)
+        if(anyNA(tempAge)){
+            x[x$age > 100, ]$age = as.integer(mean(x[x$age <= 100,]$age))
+        } else{
+            for(y in 1:length(tempAge)){
+              if(tempAge[y] < 10){
+                tempAge[y] = 10
+              }
+            }
+            x[x$age > 100,]$age = tempAge
+        }
+        # x[x$age > 100, ]$age = 0
+        # x[x$age > 100, ]$age = median(x[x$age <= 100,]$age)
+        # tempAges             = sample(x[x$age <= 100,]$age, nrow(x[x$age > 100,]),replace = T)
+        # x[x$age > 100, ]$age = tempAges
+        x$ageCat             = findInterval(x$age, c(10, 20, 30, 40, 50, 60, 70, 80, 90))
+        x                    = reorderColumns(x,gritSort)
+        return(x)
     }, error = function(e) e)
   
-  tryCatch({
-    x         = read.delim(sourceFile)
-    x$country = as.factor(x$country)
-    x$race    = as.factor(x$race)
-    x$gender  = as.factor(x$gender)
-    x$hand    = as.factor(x$hand)
-    if(is.null(x$source)){
-      x$source  = 5
-    }    else{
-      x$source  = as.factor(x$source)
-    }
-    # Replace unrealistic age valus
-    x[x$age > 1911,]$age = abs(2012 - x[x$age > 1911,]$age) 
-    agePredictor = lm(age~., data = x[x$age <= 100,])
-    tempAge      = predict(agePredictor, newdata = x[x$age > 100,])
-    tempAge      = as.integer(tempAge)
-    if(anyNA(tempAge)){
-      x[x$age > 100, ]$age = as.integer(mean(x[x$age <= 100,]$age))
-    } else{
-      for(y in 1:length(tempAge)){
-        if(tempAge[y] < 10){
-          tempAge[y] = 10
+    tryCatch({
+        x         = read.delim(sourceFile)
+        x$country = as.factor(x$country)
+        x$race    = as.factor(x$race)
+        x$gender  = as.factor(x$gender)
+        x$hand    = as.factor(x$hand)
+        if(is.null(x$source)){
+            x$source  = 5
+        }    else{
+            x$source  = as.factor(x$source)
         }
-      }
-      x[x$age > 100,]$age = tempAge
-    }
-    # x[x$age > 100, ]$age = 0
-    # x[x$age > 100, ]$age = median(x[x$age <= 100,]$age)
-    # tempAges             = sample(x[x$age <= 100,]$age, nrow(x[x$age > 100,]),replace = T)
-    # x[x$age > 100, ]$age = tempAges
-    x$ageCat             = findInterval(x$age, c(10, 20, 30, 40, 50, 60, 70, 80, 90))
-    if(!is.null(x$familysize)){
-      x[x$familysize > 10,]$familysize = median(x$familysize)
-    }
+        # Replace unrealistic age valus
+        x[x$age > 1911,]$age = abs(2012 - x[x$age > 1911,]$age) 
+        agePredictor = lm(age~., data = x[x$age <= 100,])
+        tempAge      = predict(agePredictor, newdata = x[x$age > 100,])
+        tempAge      = as.integer(tempAge)
+        if(anyNA(tempAge)){
+            x[x$age > 100, ]$age = as.integer(mean(x[x$age <= 100,]$age))
+        } else{
+            for(y in 1:length(tempAge)){
+                if(tempAge[y] < 10){
+                    tempAge[y] = 10
+                }
+            }
+            x[x$age > 100,]$age = tempAge
+        }
+        # x[x$age > 100, ]$age = 0
+        # x[x$age > 100, ]$age = median(x[x$age <= 100,]$age)
+        # tempAges             = sample(x[x$age <= 100,]$age, nrow(x[x$age > 100,]),replace = T)
+        # x[x$age > 100, ]$age = tempAges
+        x$ageCat = findInterval(x$age, c(10, 20, 30, 40, 50, 60, 70, 80, 90))
+        if(!is.null(x$familysize)){
+            x[x$familysize > 10,]$familysize = median(x$familysize)
+        }
     },error = function(e) e)
-  if(!is.null(x$married)){
-    x$married = as.factor(x$married)
-  }
-  if(!is.null(x$voted)){
-    x$voted = as.factor(x$voted)
-  }
-  if(!is.null(x$religion)){
-    x$religion = as.factor(x$religion)
-  }
-  if(!is.null(x$race)){
-    x$race = as.factor(x$race)
-  }
-  if(!is.null(x$orientation)){
-    x$orientation = as.factor(x$orientation)
-  }
-  x = reorderColumns(x,gritSort)
-  return(x)
+    if(!is.null(x$married)){
+        x$married = as.factor(x$married)
+    }
+    if(!is.null(x$voted)){
+        x$voted = as.factor(x$voted)
+    }
+    if(!is.null(x$religion)){
+        x$religion = as.factor(x$religion)
+    }
+    if(!is.null(x$race)){
+        x$race = as.factor(x$race)
+    }
+    if(!is.null(x$orientation)){
+        x$orientation = as.factor(x$orientation)
+    }
+    x = reorderColumns(x,gritSort)
+    return(x)
 }
 
 data = clean("Big5.xlsx",F)
@@ -192,30 +192,30 @@ getDataSetWithBig5 = function(data, grit, scale) {
 }
 
 getGritDF = function(){
-  grit          = clean("Grit.csv",T)
-  factorsGrit   = fa(grit[, which(colnames(grit) == "E1"):(which(colnames(grit) == "E1")+49)], nfactors = 5, rotate = "varimax", fm = "ml")
-  gritValue     = fa(grit[, which(colnames(grit) == "GS1"):(which(colnames(grit) == "GS1")+11)], nfactors = 1, rotate = "varimax", fm = "ml")
-  gritQuestions = grit[, which(colnames(grit) == "GS1"):(which(colnames(grit) == "GS1")+11)]
-  temp          = rep(6, nrow(gritQuestions))
-  for (i in c(1, 4, 6, 9, 10, 12)) {
-    gritQuestions[, i] = temp - gritQuestions[, i]
-  }
-  temp2                     = getDataSetWithBig5(grit,T,F)
-  gritScores                = factorsGrit$scores
-  colnames(gritScores)      = c("Intro/Extra", "Neuro", "Agree", "Conscient", "Openess")
-  gritScores                = data.frame(gritScores)
-  gritScores$Neuro          = -1 * (gritScores$Neuro)
-  gritScores2               = getDataSetWithBig5(grit, TRUE,F)
-  temp                      = gritValue$scores
-  colnames(temp)            = c("Grit")
-  gritFactors               = cbind(grit[, c("country", "education", "urban", "gender", "engnat", "age", "hand", "religion", "orientation","race","voted","married", "familysize", "ageCat", "source")], gritScores2, temp)
-  gritFactors$realGrit      = rowSums(gritQuestions)
-  return(gritFactors)
+    grit          = clean("Grit.csv",T)
+    factorsGrit   = fa(grit[, which(colnames(grit) == "E1"):(which(colnames(grit) == "E1")+49)], nfactors = 5, rotate = "varimax", fm = "ml")
+    gritValue     = fa(grit[, which(colnames(grit) == "GS1"):(which(colnames(grit) == "GS1")+11)], nfactors = 1, rotate = "varimax", fm = "ml")
+    gritQuestions = grit[, which(colnames(grit) == "GS1"):(which(colnames(grit) == "GS1")+11)]
+    temp          = rep(6, nrow(gritQuestions))
+    for (i in c(1, 4, 6, 9, 10, 12)) {
+        gritQuestions[, i] = temp - gritQuestions[, i]
+    }
+    temp2                     = getDataSetWithBig5(grit,T,F)
+    gritScores                = factorsGrit$scores
+    colnames(gritScores)      = c("Intro/Extra", "Neuro", "Agree", "Conscient", "Openess")
+    gritScores                = data.frame(gritScores)
+    gritScores$Neuro          = -1 * (gritScores$Neuro)
+    gritScores2               = getDataSetWithBig5(grit, TRUE,F)
+    temp                      = gritValue$scores
+    colnames(temp)            = c("Grit")
+    gritFactors               = cbind(grit[, c("country", "education", "urban", "gender", "engnat", "age", "hand", "religion", "orientation","race","voted","married", "familysize", "ageCat", "source")], gritScores2, temp)
+    gritFactors$realGrit      = rowSums(gritQuestions)
+    return(gritFactors)
 }
 
 getCombinedData = function(data,scaled){
-  fiveFactors = getDataSetWithBig5(data,FALSE,scaled)
-  gritFactors = getGritDF()
-  tempDF      = rbind(fiveFactors,gritFactors[,colnames(fiveFactors)])
-  return(tempDF)
+    fiveFactors = getDataSetWithBig5(data,FALSE,scaled)
+    gritFactors = getGritDF()
+    tempDF      = rbind(fiveFactors,gritFactors[,colnames(fiveFactors)])
+    return(tempDF)
 }
