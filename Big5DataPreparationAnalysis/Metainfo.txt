@@ -1,4 +1,4 @@
-Name of Quantlet : Big5GritPredictor
+Name of Quantlet : Big5DataPreparationAnalysis
 
 Published in : Big5
 
