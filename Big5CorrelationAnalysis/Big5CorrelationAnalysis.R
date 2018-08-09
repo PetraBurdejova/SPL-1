@@ -16,10 +16,3 @@ corWithAgeGender = cor(big5[,c(traits,c("age","gender"))])
 corrplot.mixed(corWithAgeGender,lower.col = "black", upper ="square")
 corrplot.mixed(corWithAgeGender,lower.col = "black", upper ="square",order="AOE")
 
-
-
-
-
-
-temp = cor(clusters[,c("age","Intro", "Neuro", "Agree", "Conscient", "Openess","Cluster")])
-corrplot.mixed(temp,lower = "number", upper = "pie", lower.col  = "black")
