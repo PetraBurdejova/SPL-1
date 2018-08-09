@@ -1,4 +1,4 @@
-source("Big5GritDataPreparation/Big5GritDataPreparation.R")
+source("SPL_Big5GritDataPreparation/SPL_Big5GritDataPreparation.R")
 
 realValues       = getCombinedData(TRUE)
 traitNames       = c("Intro", "Neuro", "Agree", "Conscient", "Openess")

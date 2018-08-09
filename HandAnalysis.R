@@ -1,6 +1,6 @@
 # Tests for defining the Average values of all personality traits between left-handed and right-handed over the age
 
-source("Big5GritDataPreparation/Big5GritDataPreparation.R")
+source("SPL_Big5GritDataPreparation/SPL_Big5GritDataPreparation.R")
 if (!require("compare")) install.packages("compare")
 library("compare")
 

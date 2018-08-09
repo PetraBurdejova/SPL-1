@@ -1,4 +1,4 @@
-source("Big5GritDataPreparation/Big5GritDataPreparation.R")
+source("SPL_Big5GritDataPreparation/SPL_Big5GritDataPreparation.R")
 if (!require("corrplot")) install.packages("corrplot")
 library("corrplot")
 if (!require("cluster")) install.packages("cluster")
