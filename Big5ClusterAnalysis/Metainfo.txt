@@ -1,0 +1,12 @@
+Name of Quantlet : Big5ClusterAnalysis
+
+Published in : Big5
+
+Description : 'Performs a cluster analysis on the Big 5 data set. The results of clustering with 2 to 5 clusters
+using kmeans are shown. Then the optimal number of clusters is estimated for both kmeans and pam using the elbow
+method, average silhouette and GAP_statistic. At the end both kmeans and pam are visualized using 2 (according
+to the analyis the optimal number) clusters.'
+
+Keywords : Big5, cluster, kmeans, pam
+
+Author : Matthias Becher

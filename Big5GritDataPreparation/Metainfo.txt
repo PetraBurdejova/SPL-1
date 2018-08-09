@@ -1,0 +1,15 @@
+Name of Quantlet : Big5GritDataPreparation
+
+Published in : Big5
+
+Description : 'Takes a data set with answers to a Big 5 personality (and Grit) test and transforms them
+into actual values for the Big 5 personality traits (or Grit). Also removes unrealistic values for age or 
+family size.'
+
+Keywords : Big5, Girt, datapreparation
+
+See also : Big5DataPreparationAnalysis, Big5GritAnalysis
+
+Author : Matthias Becher
+
+Datafile : Big5.xlsx, Grit.csv

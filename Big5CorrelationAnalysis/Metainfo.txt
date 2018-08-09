@@ -1,0 +1,11 @@
+Name of Quantlet : Big5CorrelationAnalysis
+
+Published in : Big5
+
+Description : 'Shows the correlation of the Big 5 traits in a corrplot. Also shows the correlation with the 5
+traits, age and gender in two plots. The first is the default corrplot. The second is ordered using angular order
+of eigenvectors (AOE)'
+
+Keywords : Big5, correlation
+
+Author : Matthias Becher

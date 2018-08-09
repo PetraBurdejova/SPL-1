@@ -1,0 +1,11 @@
+Name of Quantlet : Big5GritAnalysis
+
+Published in : Big5
+
+Description : 'Compares the top 5% and bottom 5% of people in terms of their grit score w.r.t. education.
+Also compares those two groups and the middle 90% w.r.t. whether they voted in the previous year. Additionally,
+the mean values of grit w.r.t. age are shown both with age year by year and age categories.'
+
+Keywords : Grit, percentile, age
+
+Author : Matthias Becher

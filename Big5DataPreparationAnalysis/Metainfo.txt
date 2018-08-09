@@ -1,0 +1,13 @@
+Name of Quantlet : Big5GritPredictor
+
+Published in : Big5
+
+Description : 'This analysis compares the results of three methods to extract the values of the personality traits
+give the answers to the questionnaire. Those methods are: the official evaluation key, factor analyis and pricipal
+component analysis. First the correct numbers of pc/factors is estimated. Then the results o ftwo pca methods 
+(prcomp, princomp) are compared. At the end the results of pca, fa and the evaluation key are compared using density
+distribution and mean error.'
+
+Keywords : Big5, factoranalysis, pca
+
+Author : Matthias Becher
