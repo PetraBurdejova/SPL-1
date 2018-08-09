@@ -56,19 +56,19 @@ plot(gritFactors[gritFactors$age > 0,]$age,gritFactors[gritFactors$age > 0,]$rea
 par(mfrow=c(2,1))
 ageGrit = c()
 for(x in min(gritFactors[gritFactors$age > 0,]$age):60){
-  ageGrit = c(ageGrit,mean(gritFactors[gritFactors$age == x,]$realGrit))
+    ageGrit = c(ageGrit,mean(gritFactors[gritFactors$age == x,]$realGrit))
 }
 for(x in 1:length(ageGrit)){
-  if(is.nan(ageGrit[x])){
-    ageGrit[x] = (ageGrit[x-1]+ageGrit[x+1])/2
-  }
+    if(is.nan(ageGrit[x])){
+        ageGrit[x] = (ageGrit[x-1]+ageGrit[x+1])/2
+    }
 }
 plot(min(gritFactors[gritFactors$age > 0,]$age):60, ageGrit, type = "l",ylab = "Grit",xlab = "Age", 
      main = "Grit over Age")
 
 ageCatGrit = c()
 for(x in (min(gritFactors$ageCat)+1):max(gritFactors$ageCat)){
-  ageCatGrit = c(ageCatGrit,mean(gritFactors[gritFactors$ageCat == x,]$realGrit))
+    ageCatGrit = c(ageCatGrit,mean(gritFactors[gritFactors$ageCat == x,]$realGrit))
 }
 plot(ageCatGrit, type = "l", ylab = "Grit", xlab = "Age-Category", main = "Grit over Age-Categories")
 par(mfrow=c(1,1))
