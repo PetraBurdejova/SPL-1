@@ -7,9 +7,9 @@ gritFactors = getGritDF()
 
 #Building an estimator for grit and evaluating the results.
 
-regressors = c("Intro", "Neuro", "Agree", "Openess", "Conscient", "age", "gender", "education", "voted", "familysize", "married", "urban")
-target = c("realGrit")
-gritPredictor             = lm(as.formula(paste(target, paste(regressors, collapse=" + "), sep=" ~ "))
+regressors    = c("Intro", "Neuro", "Agree", "Openess", "Conscient", "age", "gender", "education", "voted", "familysize", "married", "urban")
+target        = c("realGrit")
+gritPredictor = lm(as.formula(paste(target, paste(regressors, collapse=" + "), sep=" ~ "))
                                , data = gritFactors)
 summary(gritPredictor)
 gritFactors$predictedGRit = predict(gritPredictor, newdata = gritFactors)
@@ -37,16 +37,16 @@ legend(x = "topright", y = NULL, legend = c("Real", "Predicted"), col = c("red",
 #Looking at the effect of adding the different regressors one by one.
 
 addingRegressors = function(regressors, target, dataSet){
-  RSS            = double()
-  tempString     = c()
-  for(x in regressors){
-    tempString    = c(tempString,x)
-    gritPredictor = lm(as.formula(paste(target, paste(tempString, collapse=" + "), sep=" ~ ")), data = dataSet)
-    tempRSS       = mean(gritPredictor$residuals * gritPredictor$residuals)
-    RSS           = c(RSS, tempRSS)
-  }
-  names(RSS) = regressors
-  return(RSS)
+    RSS            = double()
+    tempString     = c()
+    for(x in regressors){
+        tempString    = c(tempString,x)
+        gritPredictor = lm(as.formula(paste(target, paste(tempString, collapse=" + "), sep=" ~ ")), data = dataSet)
+        tempRSS       = mean(gritPredictor$residuals * gritPredictor$residuals)
+        RSS           = c(RSS, tempRSS)
+    }
+    names(RSS) = regressors
+    return(RSS)
 }
 
 attach(mtcars)
