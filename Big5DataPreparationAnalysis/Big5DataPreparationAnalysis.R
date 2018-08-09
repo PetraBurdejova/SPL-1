@@ -82,8 +82,8 @@ mean(pca$center - pca2$center)
 mean(pca$sdev - pca2$sdev)
 
 
-compareDesities = function(d) {
-    realValues = getDataSetWithBig5(d, F, T)
+compareDesities = function(d,fileName = "Big5.xlsx") {
+    realValues = getDataSetWithBig5(FileName = fileName, F, T)
     oldValues = getFactors(d)
     pcaValues = princompPCA(d)
     par(lwd = 2)
@@ -103,8 +103,8 @@ compareDesities = function(d) {
 }
 
 
-compareDifferences = function(d) {
-    realValues = getDataSetWithBig5(d, F, T)
+compareDifferences = function(d,fileName = "Big5.xlsx") {
+    realValues = getDataSetWithBig5(FileName = fileName, F, T)
     oldValues  = getFactors(d)
     pcaValues  = psychPCA(d)
     
@@ -133,7 +133,7 @@ compareDifferences(data)
 # there is very little we can assume that they are distinct data set. Therefore we can combine
 # them during the analysis, in order to have a larger data set.
 
-fiveFactors = getDataSetWithBig5(data, FALSE, F)
+fiveFactors = getDataSetWithBig5("Big5.xlsx", FALSE, F)
 gritFactors = getGritDF()
 
 nrow(merge(x = fiveFactors, y = gritFactors, by = c(c("country", "gender", "engnat", "age", "hand", 

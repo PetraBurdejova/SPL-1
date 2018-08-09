@@ -195,7 +195,7 @@ getResults = function(dataSet) {
 }
 
 
-getDataSetWithBig5 = function(FileName, grit, scale) {
+getDataSetWithBig5 = function(FileName = "Big5.xlsx", grit, scale) {
     data             = clean(sourceFile = FileName,gritSort = grit)
     tempSet          = getResults(data)
     names            = c("Intro","Neuro","Agree","Conscient","Openess")
