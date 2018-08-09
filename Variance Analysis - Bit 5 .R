@@ -1,7 +1,6 @@
-source("DataPreparation.R")
+source("Big5GritDataPreparation/Big5GritDataPreparation.R")
 
-DATA = getDataSetWithBig5(data, F, F)
-
+DATA = getCombinedData(FALSE)
 
 #Do the analysis of variance 
 

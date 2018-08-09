@@ -1,6 +1,6 @@
 source("Big5GritDataPreparation/Big5GritDataPreparation.R")
 
-realValues       = getDataSetWithBig5(data, FALSE, T)
+realValues       = getCombinedData(TRUE)
 traitNames       = c("Intro", "Neuro", "Agree", "Conscient", "Openess")
 start            = which(colnames(data) == "E1")
 finish           = start + 49

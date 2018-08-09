@@ -5,7 +5,7 @@ if (!require("cluster")) install.packages("cluster")
 library("cluster")
 
 traits = c("Intro", "Neuro", "Openess", "Conscient", "Agree")
-big5 = getCombinedData(data,T)[,c("age",traits)]
+big5 = getCombinedData(TRUE)[,c("age",traits)]
 
 #Clustering with 2 to 5 clusters
 for(x in 2:5){

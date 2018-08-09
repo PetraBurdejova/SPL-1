@@ -2,7 +2,7 @@
 
 source("Big5GritDataPreparation/Big5GritDataPreparation.R")
 
-fiveFactors = getDataSetWithBig5(data, FALSE,F)
+fiveFactors = getCombinedData(FALSE)
 
 #All People
 avgAge1 <- apply(fiveFactors[fiveFactors$ageCat == 1,9:13],2,mean,na.rm=T)

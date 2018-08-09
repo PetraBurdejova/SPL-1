@@ -1,5 +1,5 @@
 source("Big5GritDataPreparation/Big5GritDataPreparation.R")
-fiveFactors <- getCombinedData(data,F)
+fiveFactors <- getCombinedData(FALSE)
 
 
 males = fiveFactors[fiveFactors$gender==1,]

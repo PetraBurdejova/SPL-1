@@ -3,7 +3,7 @@ if (!require("corrplot")) install.packages("corrplot")
 library(corrplot)
 
 
-big5 = getCombinedData(data, F)
+big5 = getCombinedData(FALSE)
 traits = c("Intro", "Neuro", "Openess", "Conscient", "Agree")
 
 big5Cor = cor(big5[, traits])

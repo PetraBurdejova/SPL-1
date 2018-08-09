@@ -7,7 +7,7 @@ library("compare")
 if (!require("tidyverse")) install.packages("tidyverse")
 library("tidyverse")
 
-df = getDataSetWithBig5(data, FALSE, FALSE)
+df = getCombinedData(FALSE)
 df$ageCat = as.factor(df$ageCat)
 
 cols = c("Intro", "Neuro", "Agree", 

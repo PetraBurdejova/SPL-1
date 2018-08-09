@@ -28,6 +28,7 @@ reorderColumns = function(dataSet,gritSort,questionnaireNames = NULL,gritNames =
     }
     notQuestionnaire = setdiff(colnames(dataSet),questionnaireNames)
     resultDF         = dataSet[,c(notQuestionnaire,questionnaireNames)]
+    
     if(gritSort){
         if(missing(gritNames)){
             letter    = "GS"
@@ -191,8 +192,8 @@ getDataSetWithBig5 = function(data, grit, scale) {
     return(tempSet)
 }
 
-getGritDF = function(){
-    grit          = clean("Grit.csv",T)
+getGritDF = function(fileName = "Grit.csv"){
+    grit          = clean(fileName,T)
     factorsGrit   = fa(grit[, which(colnames(grit) == "E1"):(which(colnames(grit) == "E1")+49)], nfactors = 5, rotate = "varimax", fm = "ml")
     gritValue     = fa(grit[, which(colnames(grit) == "GS1"):(which(colnames(grit) == "GS1")+11)], nfactors = 1, rotate = "varimax", fm = "ml")
     gritQuestions = grit[, which(colnames(grit) == "GS1"):(which(colnames(grit) == "GS1")+11)]
@@ -200,12 +201,12 @@ getGritDF = function(){
     for (i in c(1, 4, 6, 9, 10, 12)) {
         gritQuestions[, i] = temp - gritQuestions[, i]
     }
-    temp2                     = getDataSetWithBig5(grit,T,F)
+    temp2                     = getDataSetWithBig5(grit,TRUE,FALSE)
     gritScores                = factorsGrit$scores
     colnames(gritScores)      = c("Intro/Extra", "Neuro", "Agree", "Conscient", "Openess")
     gritScores                = data.frame(gritScores)
     gritScores$Neuro          = -1 * (gritScores$Neuro)
-    gritScores2               = getDataSetWithBig5(grit, TRUE,F)
+    gritScores2               = getDataSetWithBig5(grit, TRUE,FALSE)
     temp                      = gritValue$scores
     colnames(temp)            = c("Grit")
     gritFactors               = cbind(grit[, c("country", "education", "urban", "gender", "engnat", "age", "hand", "religion", "orientation","race","voted","married", "familysize", "ageCat", "source")], gritScores2, temp)
@@ -213,9 +214,9 @@ getGritDF = function(){
     return(gritFactors)
 }
 
-getCombinedData = function(data,scaled){
-    fiveFactors = getDataSetWithBig5(data,FALSE,scaled)
-    gritFactors = getGritDF()
+getCombinedData = function(scaled,big5FileName = "Big5.xlsx", gritFileName = "Grit.csv"){
+    fiveFactors = getDataSetWithBig5(clean(big5FileName,FALSE),FALSE,scaled)
+    gritFactors = getGritDF(gritFileName)
     tempDF      = rbind(fiveFactors,gritFactors[,colnames(fiveFactors)])
     return(tempDF)
 }
