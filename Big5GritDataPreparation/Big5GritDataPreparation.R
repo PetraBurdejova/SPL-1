@@ -192,7 +192,7 @@ getDataSetWithBig5 = function(data, grit, scale) {
 }
 
 getGritDF = function(){
-  grit          = clean("data.csv",T)
+  grit          = clean("Grit.csv",T)
   factorsGrit   = fa(grit[, which(colnames(grit) == "E1"):(which(colnames(grit) == "E1")+49)], nfactors = 5, rotate = "varimax", fm = "ml")
   gritValue     = fa(grit[, which(colnames(grit) == "GS1"):(which(colnames(grit) == "GS1")+11)], nfactors = 1, rotate = "varimax", fm = "ml")
   gritQuestions = grit[, which(colnames(grit) == "GS1"):(which(colnames(grit) == "GS1")+11)]
