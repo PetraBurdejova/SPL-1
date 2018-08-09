@@ -47,10 +47,18 @@ reorderColumns = function(dataSet,gritSort,questionnaireNames = NULL,gritNames =
 clean = function(sourceFile,gritSort, surveyDate = 2012) {
     tryCatch({
         x         = read_excel(sourceFile)
-        x$country = as.factor(x$country)
-        x$race    = as.factor(x$race)
-        x$gender  = as.factor(x$gender)
-        x$hand    = as.factor(x$hand)
+        if(!is.null(x$country)){
+          x$country = as.factor(x$country)
+        }
+        if(!is.null(x$race)){
+          x$race = as.factor(x$race)
+        }
+        if(!is.null(x$gender)){
+          x$gender = as.factor(x$gender)
+        }
+        if(!is.null(x$hand)){
+          x$hand = as.factor(x$hand)
+        }
         if(is.null(x$source)){
             x$source  = 6
         }    else{
@@ -84,10 +92,18 @@ clean = function(sourceFile,gritSort, surveyDate = 2012) {
   
     tryCatch({
         x         = read.delim(sourceFile)
-        x$country = as.factor(x$country)
-        x$race    = as.factor(x$race)
-        x$gender  = as.factor(x$gender)
-        x$hand    = as.factor(x$hand)
+        if(!is.null(x$country)){
+          x$country = as.factor(x$country)
+        }
+        if(!is.null(x$race)){
+          x$race = as.factor(x$race)
+        }
+        if(!is.null(x$gender)){
+          x$gender = as.factor(x$gender)
+        }
+        if(!is.null(x$hand)){
+          x$hand = as.factor(x$hand)
+        }
         if(is.null(x$source)){
             x$source  = 5
         }    else{
