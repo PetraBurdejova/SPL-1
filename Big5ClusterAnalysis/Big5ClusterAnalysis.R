@@ -57,7 +57,7 @@ fviz_nbclust(big5[sample(nrow(big5),1000),], pam, method = "gap_stat")
 
 
 # K-means vs. PAM
-kCluster <- kmeans(big5,2,nstart = 25)
+kCluster = kmeans(big5,2,nstart = 25)
 fviz_cluster(kCluster, data = big5, geom = "point",
              stand = FALSE, ellipse.type = "norm")
 
