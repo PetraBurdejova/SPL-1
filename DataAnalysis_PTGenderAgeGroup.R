@@ -1,6 +1,6 @@
 #Tests for defining the Average values of all personality traits between males and females over the age
 
-source("DataPreparation.R")
+source("Big5GritDataPreparation/Big5GritDataPreparation.R")
 
 fiveFactors = getDataSetWithBig5(data, FALSE,F)
 

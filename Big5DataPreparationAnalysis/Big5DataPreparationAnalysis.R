@@ -1,4 +1,4 @@
-source("DataPreparation.R")
+source("Big5GritDataPreparation/Big5GritDataPreparation.R")
 
 realValues       = getDataSetWithBig5(data, FALSE,T)
 traitNames       = c("Intro", "Neuro", "Agree", "Conscient", "Openess")
