@@ -1,6 +1,6 @@
-Name of Quantlet : Big5DataPreparationAnalysis
+Name of Quantlet : SPL_Big5DataPreparationAnalysis
 
-Published in : Big5
+Published in : Statistical programming languages - Student Project on "Big5"
 
 Description : 'This analysis compares the results of three methods to extract the values of the personality traits
 give the answers to the questionnaire. Those methods are: the official evaluation key, factor analyis and pricipal

@@ -1,6 +1,6 @@
-Name of Quantlet : Big5GritAnalysis
+Name of Quantlet : SPL_Big5GritAnalysis
 
-Published in : Big5
+Published in : Statistical programming languages - Student Project on "Big5"
 
 Description : 'Compares the top 5% and bottom 5% of people in terms of their grit score w.r.t. education.
 Also compares those two groups and the middle 90% w.r.t. whether they voted in the previous year. Additionally,

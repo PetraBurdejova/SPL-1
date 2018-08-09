@@ -1,6 +1,6 @@
-Name of Quantlet : Big5GritPredictor
+Name of Quantlet : SPL_Big5GritPredictor
 
-Published in : Big5
+Published in : Statistical programming languages - Student Project on "Big5"
 
 Description : 'Analysis of a linear regression trying to estimate grit using the 5 personality traits, age, gender,
  education, voted, familysize, married, urban. The goal is to see which regressors have a significant effect on grit.

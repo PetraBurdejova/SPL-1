@@ -1,6 +1,6 @@
-Name of Quantlet : Big5ClusterAnalysis
+Name of Quantlet : SPL_Big5ClusterAnalysis
 
-Published in : Big5
+Published in : Statistical programming languages - Student Project on "Big5"
 
 Description : 'Performs a cluster analysis on the Big 5 data set. The results of clustering with 2 to 5 clusters
 using kmeans are shown. Then the optimal number of clusters is estimated for both kmeans and pam using the elbow

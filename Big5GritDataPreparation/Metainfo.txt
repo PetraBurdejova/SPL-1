@@ -1,6 +1,6 @@
-Name of Quantlet : Big5GritDataPreparation
+Name of Quantlet : SPL_Big5GritDataPreparation
 
-Published in : Big5
+Published in : Statistical programming languages - Student Project on "Big5"
 
 Description : 'Takes a data set with answers to a Big 5 personality (and Grit) test and transforms them
 into actual values for the Big 5 personality traits (or Grit). Also removes unrealistic values for age or 

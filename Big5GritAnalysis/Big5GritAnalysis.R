@@ -64,13 +64,14 @@ for(x in 1:length(ageGrit)){
     }
 }
 plot(min(gritFactors[gritFactors$age > 0,]$age):60, ageGrit, type = "l",ylab = "Grit",xlab = "Age", 
-     main = "Grit over Age")
+     main = "Grit over Age", ylim = c((min(ageGrit)-1),(max(ageGrit)+1)))
 
 ageCatGrit = c()
 for(x in (min(gritFactors$ageCat)+1):max(gritFactors$ageCat)){
     ageCatGrit = c(ageCatGrit,mean(gritFactors[gritFactors$ageCat == x,]$realGrit))
 }
-plot(ageCatGrit, type = "l", ylab = "Grit", xlab = "Age-Category", main = "Grit over Age-Categories")
+plot(ageCatGrit, type = "l", ylab = "Grit", xlab = "Age-Category", main = "Grit over Age-Categories", 
+     ylim = c((min(ageCatGrit)-1),(max(ageCatGrit)+1)))
 par(mfrow=c(1,1))
 
 mean(top5Grit$age)
