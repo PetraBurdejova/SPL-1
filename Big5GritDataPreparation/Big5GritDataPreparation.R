@@ -44,7 +44,7 @@ reorderColumns = function(dataSet,gritSort,questionnaireNames = NULL,gritNames =
 }
 
 
-clean = function(sourceFile,gritSort) {
+clean = function(sourceFile,gritSort, surveyDate = 2012) {
     tryCatch({
         x         = read_excel(sourceFile)
         x$country = as.factor(x$country)
@@ -56,8 +56,10 @@ clean = function(sourceFile,gritSort) {
         }    else{
             x$source  = as.factor(x$source)
         }
-        # Replace unrealistic age valus
-        x[x$age > 1911,]$age = abs((2012 - x[x$age > 1911,]$age)) 
+        # Replace unrealistic age values
+        if(surveyDate != 0){
+          x[x$age > (surveyDate -101),]$age = abs((surveyDate - x[x$age > (surveyDate-101),]$age))
+        }
         agePredictor = lm(age~., data = x[x$age <= 100,])
         tempAge      = predict(agePredictor, newdata = x[x$age > 100,])
         tempAge      = as.integer(tempAge)
@@ -92,7 +94,9 @@ clean = function(sourceFile,gritSort) {
             x$source  = as.factor(x$source)
         }
         # Replace unrealistic age valus
-        x[x$age > 1911,]$age = abs(2012 - x[x$age > 1911,]$age) 
+        if(surveyDate != 0){
+          x[x$age > (surveyDate-101),]$age = abs((surveyDate - x[x$age > (surveyDate-101),]$age))
+        }
         agePredictor = lm(age~., data = x[x$age <= 100,])
         tempAge      = predict(agePredictor, newdata = x[x$age > 100,])
         tempAge      = as.integer(tempAge)
@@ -175,16 +179,25 @@ getResults = function(dataSet) {
 }
 
 
-getDataSetWithBig5 = function(data, grit, scale) {
-    tempSet = getResults(data)
-    names   = c("Intro","Neuro","Agree","Conscient","Openess")
+getDataSetWithBig5 = function(FileName, grit, scale) {
+    data             = clean(sourceFile = FileName,gritSort = grit)
+    tempSet          = getResults(data)
+    names            = c("Intro","Neuro","Agree","Conscient","Openess")
+    letters            = c("E","N","A","C","O")
+    questionnaireNames = c()
+    for(l in letters){
+      for(x in 1:10){
+        questionnaireNames = c(questionnaireNames, paste(c(l,x),collapse = ""))
+      }
+    }
+    notQuestionnaire = setdiff(colnames(data),questionnaireNames)
     if (grit) {
         tempSet = tempSet[, names]
         if(scale){
           tempSet[,1:5] = data.frame(scale(tempSet[,1:5]))
         }
     } else {
-        tempSet = cbind(tempSet[, c("country", "gender", "engnat", "age", "hand","race", "ageCat", "source")], tempSet[,names])
+        tempSet = cbind(tempSet[, notQuestionnaire], tempSet[,names])
         if(scale){
           tempSet[,names] = data.frame(scale(tempSet[,names]))
         }
@@ -194,28 +207,19 @@ getDataSetWithBig5 = function(data, grit, scale) {
 
 getGritDF = function(fileName = "Grit.csv"){
     grit          = clean(fileName,T)
-    factorsGrit   = fa(grit[, which(colnames(grit) == "E1"):(which(colnames(grit) == "E1")+49)], nfactors = 5, rotate = "varimax", fm = "ml")
-    gritValue     = fa(grit[, which(colnames(grit) == "GS1"):(which(colnames(grit) == "GS1")+11)], nfactors = 1, rotate = "varimax", fm = "ml")
     gritQuestions = grit[, which(colnames(grit) == "GS1"):(which(colnames(grit) == "GS1")+11)]
     temp          = rep(6, nrow(gritQuestions))
     for (i in c(1, 4, 6, 9, 10, 12)) {
         gritQuestions[, i] = temp - gritQuestions[, i]
     }
-    temp2                     = getDataSetWithBig5(grit,TRUE,FALSE)
-    gritScores                = factorsGrit$scores
-    colnames(gritScores)      = c("Intro/Extra", "Neuro", "Agree", "Conscient", "Openess")
-    gritScores                = data.frame(gritScores)
-    gritScores$Neuro          = -1 * (gritScores$Neuro)
-    gritScores2               = getDataSetWithBig5(grit, TRUE,FALSE)
-    temp                      = gritValue$scores
-    colnames(temp)            = c("Grit")
-    gritFactors               = cbind(grit[, c("country", "education", "urban", "gender", "engnat", "age", "hand", "religion", "orientation","race","voted","married", "familysize", "ageCat", "source")], gritScores2, temp)
+    gritScores               = getDataSetWithBig5(FileName =  fileName, TRUE,FALSE)
+    gritFactors               = cbind(grit[, c("country", "education", "urban", "gender", "engnat", "age", "hand", "religion", "orientation","race","voted","married", "familysize", "ageCat", "source")], gritScores)
     gritFactors$realGrit      = rowSums(gritQuestions)
     return(gritFactors)
 }
 
 getCombinedData = function(scaled,big5FileName = "Big5.xlsx", gritFileName = "Grit.csv"){
-    fiveFactors = getDataSetWithBig5(clean(big5FileName,FALSE),FALSE,scaled)
+    fiveFactors = getDataSetWithBig5(big5FileName,FALSE,scaled)
     gritFactors = getGritDF(gritFileName)
     tempDF      = rbind(fiveFactors,gritFactors[,colnames(fiveFactors)])
     return(tempDF)
