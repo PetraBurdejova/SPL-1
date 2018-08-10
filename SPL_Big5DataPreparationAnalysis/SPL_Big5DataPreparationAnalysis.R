@@ -78,12 +78,12 @@ pcaEvaluation = fa.stats(data[, start:finish], pca$loadings)
 compareDesities = function(fileName = "Big5.xlsx") {
     d = clean(fileName,FALSE)
     realValues = getDataSetWithBig5(FileName = fileName, F, T)
-    oldValues = getFactors(d)
+    factorValues = getFactors(d)
     pcaValues = princompPCA(d)
     par(lwd = 2)
     for (x in traitNames) {
         real = density(realValues[, c(x)])
-        estimatedFA = density(oldValues[, c(x)])
+        estimatedFA = density(factorValues[, c(x)])
         estimatedPCA = density(pcaValues[, c(x)])
         plot(estimatedFA, main = paste("The density distribution of", x), col = "blue", xlab = x, 
             xlim = c(-6, 6))
@@ -100,10 +100,10 @@ compareDesities = function(fileName = "Big5.xlsx") {
 compareDifferences = function(fileName = "Big5.xlsx") {
     d = clean(fileName,FALSE)
     realValues = getDataSetWithBig5(FileName = fileName, F, T)
-    oldValues  = getFactors(d)
+    factorValues  = getFactors(d)
     pcaValues  = psychPCA(d)
     
-    avgDiffFA = abs(realValues[, traitNames] - oldValues[, traitNames])
+    avgDiffFA = abs(realValues[, traitNames] - factorValues[, traitNames])
     n = nrow(avgDiffFA) * 5
     avgDiffFA = rowSums(avgDiffFA)
     avgDiffFA = sum(avgDiffFA)/n
