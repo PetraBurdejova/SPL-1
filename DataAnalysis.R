@@ -1,9 +1,9 @@
-source("DataPreparation.R")
-fiveFactors <- getCombinedData(data,F)
+source("SPL_Big5GritDataPreparation/SPL_Big5GritDataPreparation.R")
+fiveFactors = getCombinedData(FALSE)
 
 
-males = fiveFactors[fiveFactors$gender==1,]
-females =fiveFactors[fiveFactors$gender==2,]
+males   = fiveFactors[fiveFactors$gender==1,]
+females = fiveFactors[fiveFactors$gender==2,]
 
 #Count occurances of country levels in males
 temp <- count(males, "country")
