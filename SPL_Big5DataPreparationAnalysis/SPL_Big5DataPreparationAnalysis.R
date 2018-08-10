@@ -59,6 +59,11 @@ pca2 = prcomp(data[, start:finish])
 fviz_screeplot(pca, addlabels = T)
 fviz_screeplot(pca2, addlabels = T)
 
+# Compare two pca methods
+mean(pca$center - pca2$center)
+mean(pca$sdev - pca2$sdev)
+
+
 for (x in 1:5) {
     plot(fviz_contrib(pca, choice = "var", axes = x, top = 10))
 }
@@ -70,12 +75,8 @@ factors = fa(data[, start:finish], nfactors = 5, rotate = "varimax", fm = "ml")
 factorsEvaluation = fa.stats(data[, start:finish], factors$loadings)
 pcaEvaluation = fa.stats(data[, start:finish], pca$loadings)
 
-# Compare two pca methods
-mean(pca$center - pca2$center)
-mean(pca$sdev - pca2$sdev)
-
-
-compareDesities = function(d,fileName = "Big5.xlsx") {
+compareDesities = function(fileName = "Big5.xlsx") {
+    d = clean(fileName,FALSE)
     realValues = getDataSetWithBig5(FileName = fileName, F, T)
     oldValues = getFactors(d)
     pcaValues = princompPCA(d)
@@ -96,7 +97,8 @@ compareDesities = function(d,fileName = "Big5.xlsx") {
 }
 
 
-compareDifferences = function(d,fileName = "Big5.xlsx") {
+compareDifferences = function(fileName = "Big5.xlsx") {
+    d = clean(fileName,FALSE)
     realValues = getDataSetWithBig5(FileName = fileName, F, T)
     oldValues  = getFactors(d)
     pcaValues  = psychPCA(d)
@@ -110,15 +112,12 @@ compareDifferences = function(d,fileName = "Big5.xlsx") {
     avgDiffPCA = rowSums(avgDiffPCA)
     avgDiffPCA = sum(avgDiffPCA)/n
     
-    summary(realValues[, traitNames])
-    summary(oldValues[, traitNames])
-    summary(pcaValues[, traitNames])
     print(avgDiffFA)
     print(avgDiffPCA)
 }
 
-compareDesities(data)
-compareDifferences(data)
+compareDesities()
+compareDifferences()
 
 
 
@@ -126,9 +125,9 @@ compareDifferences(data)
 # there is very little we can assume that they are distinct data set. Therefore we can combine
 # them during the analysis, in order to have a larger data set.
 
-fiveFactors = getDataSetWithBig5("Big5.xlsx", FALSE, F)
+fiveFactors = getDataSetWithBig5("Big5.xlsx", FALSE, FALSE)
 gritFactors = getGritDF()
 
 nrow(merge(x = fiveFactors, y = gritFactors, by = c(c("country", "gender", "engnat", "age", "hand", 
     "race", "ageCat"), traitNames), all = FALSE))
-nrow(merge(x = fiveFactors, y = gritFactors, by = traitNames, all = F))
+nrow(merge(x = fiveFactors, y = gritFactors, by = traitNames, all = FALSE))
