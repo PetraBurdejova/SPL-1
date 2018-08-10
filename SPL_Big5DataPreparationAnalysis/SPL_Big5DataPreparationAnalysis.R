@@ -15,13 +15,6 @@ temp = princomp(data[, start:finish])
 screeplot(temp, npcs = 15, main = "Screeplot for PCA")
 temp = cov(data[, start:finish])
 
-
-ev = eigen(cor(data[, start:finish]))  # get eigenvalues
-ap = parallel(subject = nrow(data[, start:finish]), var = ncol(data[, start:finish]), rep = 100, cent = 0.05)
-nS = nScree(x = ev$values, aparallel = ap$eigen$qevpea)
-plotnScree(nS)
-par(col = "black")
-
 # Principal Componant Analysis: This is the method which performs the PCA. I chose 5 pcas since
 # this corresonds to the Big 5.
 psychPCA = function(data) {
